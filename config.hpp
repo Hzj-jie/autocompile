@@ -1,10 +1,13 @@
 
+#pragma once
 #if 0
 #include <boost/filesystem/path.hpp>
 #endif
 #include <fstream>
 #include <string>
+#include <vector>
 #include <stdlib.h>
+#include "file.hpp"
 using namespace std;
 #if 0
 using namespace boost::filesystem;
@@ -15,21 +18,20 @@ class config
 private:
     void read_file(const string& file)
     {
-        ifstream is(file, ifstream::in);
-        if(is)
+        vector<string> lines;
+        if(read_all_lines(file, lines))
         {
-            do
+            for(int i = 0; i < lines.size(); i++)
             {
-                string i;
-                is >> i;
-                if(!i.empty())
+                const string& s = lines[i];
+                if(!s.empty())
                 {
-                    size_t p = i.find(' ');
+                    size_t p = s.find(' ');
                     if(p != string::npos)
                     {
                         string k, v;
-                        k = i.substr(0, p);
-                        v = i.substr(p + 1);
+                        k = s.substr(0, p);
+                        v = s.substr(p + 1);
                         if(k == "cc_m")
                             _cc_m = v;
                         else if(k == "cc")
@@ -39,7 +41,6 @@ private:
                     }
                 }
             }
-            while(!is.eof());
         }
     }
 
