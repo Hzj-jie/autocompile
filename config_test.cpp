@@ -10,6 +10,8 @@ int main()
     p(cc_m);
     p(cc);
     p(list);
+    p(main);
+    p(objs);
 #undef p
 }
 

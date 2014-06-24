@@ -10,6 +10,7 @@ namespace
     {
         if(is)
         {
+            o.clear();
             string i;
             while(getline(is, i)) o.push_back(i);
             return true;
