@@ -24,7 +24,7 @@ public:
     }
 } system_available;
 
-bool process_output(const string& cmd, vector<string>& output, vector<string>& error)
+static bool process_output(const string& cmd, vector<string>& output, vector<string>& error)
 {
     const char* out = "temp.out";
     const char* err = "temp.err";
