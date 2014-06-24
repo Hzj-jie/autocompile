@@ -13,7 +13,7 @@ using namespace std;
 using namespace boost::filesystem;
 #endif
 
-class config
+class config_t
 {
 private:
     void read_file(const string& file)
@@ -61,7 +61,7 @@ public:
     return_value(list);
 #undef return_value
 
-    config()
+    config_t()
     {
         const char* autocompile = "autocompile";
 #if 0
@@ -87,9 +87,9 @@ public:
         }
         read_file(autocompile);
     }
-};
+} config;
 
-const string config::default_cc_m = "g++ -M";
-const string config::default_cc = "g++";
-const string config::default_list = "ls -1 *.cpp *.hpp";
+const string config_t::default_cc_m = "g++ -M";
+const string config_t::default_cc = "g++";
+const string config_t::default_list = "ls -1 *.cpp *.c";
 

@@ -35,8 +35,8 @@ static bool process_output(const string& cmd, vector<string>& output, vector<str
                  (i != 9009);
         r = read_all_lines(string(out), output) && r;
         r = read_all_lines(string(err), error) && r;
-        r = (remove(out) != 0) && r;
-        r = (remove(err) != 0) && r;
+        r = (remove(out) == 0) && r;
+        r = (remove(err) == 0) && r;
         return r;
     }
     else return false;
