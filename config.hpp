@@ -48,9 +48,9 @@ private:
     string _cc;
     string _list;
 
-    const string default_cc_m = "g++ -M";
-    const string default_cc = "g++";
-    const string default_list = "ls -1 *.cpp *.hpp";
+    const static string default_cc_m;
+    const static string default_cc;
+    const static string default_list;
 
 public:
 #define return_value(x) \
@@ -88,4 +88,8 @@ public:
         read_file(autocompile);
     }
 };
+
+const string config::default_cc_m = "g++ -M";
+const string config::default_cc = "g++";
+const string config::default_list = "ls -1 *.cpp *.hpp";
 
