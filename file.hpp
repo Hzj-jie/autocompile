@@ -27,3 +27,12 @@ static bool read_all_lines(const string& file, vector<string>& o)
     return r;
 }
 
+static string replace_suffix(const string& s, const string& new_suffix)
+{
+    int i = s.find_last_of('.');
+    if(i == string::npos)
+        return s;
+    else
+        return s.substr(0, i + 1) + new_suffix;
+}
+

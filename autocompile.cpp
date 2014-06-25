@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <boost/format.hpp>
 #include "config.hpp"
 #include "process_output.hpp"
 using namespace std;
@@ -44,6 +45,7 @@ int main()
                     print_error(err);
                     for(int j = 0; j < out.size(); j++)
                         cout << out[j] << endl;
+                    cout << '\t' << boost::format(config.cc()) % files[i] % replace_suffix(files[i], "o") << endl;
                 }
                 else
                 {
