@@ -39,40 +39,73 @@ private:
                     }
                     if(k == "cc_m")
                         _cc_m = v;
+                    else if(k == "cc_c")
+                        _cc_c = v;
                     else if(k == "cc")
                         _cc = v;
+                    else if(k == "cc_flag")
+                        _cc_flag = v;
+                    else if(k == "dlink")
+                        _dlink = v;
                     else if(k == "list")
                         _list = v;
                     else if(k == "main")
                         _main = v;
                     else if(k == "objs")
                         _objs = v;
+                    else if(k == "out")
+                        _out = v;
+                    else if(k == "dlibs")
+                        _dlibs = v;
+                    else if(k == "rm")
+                        _rm = v;
                 }
             }
         }
+
+        if(_cc_c.empty() && !_cc.empty())
+            _cc_c = _cc + " -c";
     }
 
     string _cc_m;
+    string _cc_c;
     string _cc;
+    string _cc_flag;
+    string _dlink;
     string _list;
     string _main;
     string _objs;
+    string _out;
+    string _dlibs;
+    string _rm;
 
     const static string default_cc_m;
+    const static string default_cc_c;
     const static string default_cc;
+    const static string default_cc_flag;
+    const static string default_dlink;
     const static string default_list;
     const static string default_main;
     const static string default_objs;
+    const static string default_out;
+    const static string default_dlibs;
+    const static string default_rm;
 
 public:
 #define return_value(x) \
     const string& x() const { \
         return (_##x.empty() ? default_##x : _##x); }
     return_value(cc_m);
+    return_value(cc_c);
     return_value(cc);
+    return_value(cc_flag);
+    return_value(dlink);
     return_value(list);
     return_value(main);
     return_value(objs);
+    return_value(out);
+    return_value(dlibs);
+    return_value(rm);
 #undef return_value
 
     config_t()
@@ -104,8 +137,14 @@ public:
 } config;
 
 const string config_t::default_cc_m = "g++ -M";
-const string config_t::default_cc = "g++ -c %1% -o %2%";
+const string config_t::default_cc_c = "g++ -c %1% -o %2%";
+const string config_t::default_cc = "g++ %1% -o %2%";
+const string config_t::default_cc_flag = "";
+const string config_t::default_dlink = "-l";
 const string config_t::default_list = "ls -1 *.cpp *.c";
 const string config_t::default_main = "main.cpp";
 const string config_t::default_objs = "";
+const string config_t::default_out = "main";
+const string config_t::default_dlibs = "";
+const string config_t::default_rm = "rm";
 
