@@ -110,13 +110,13 @@ public:
 
     config_t()
     {
-        const char* autocompile = "autocompile";
+        const char* autocompile = ".autocompile";
 #if 0
         path file_path(string(".") + autocompile);
 #endif
         if(getenv("HOMEPATH") != nullptr)
         {
-            read_file(string(getenv("HOMEPATH")) + "/" + "." + autocompile);
+            read_file(string(getenv("HOMEPATH")) + "/" + autocompile);
 #if 0
             path p(getenv("HOMEPATH"));
             p /= file_path;
@@ -125,7 +125,7 @@ public:
         }
         if(getenv("HOME") != nullptr)
         {
-            read_file(string(getenv("HOME")) + "/" + "." + autocompile);
+            read_file(string(getenv("HOME")) + "/" + autocompile);
 #if 0
             path p(getenv("HOME"));
             p /= file_path;
