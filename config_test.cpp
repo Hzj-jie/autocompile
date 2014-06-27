@@ -16,6 +16,7 @@ int main()
     p(main);
     p(objs);
     p(dlibs);
+    p(out);
 #undef p
 }
 
