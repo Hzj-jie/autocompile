@@ -171,7 +171,7 @@ int main()
         }
 
         cout << "clean:" << endl;
-        cout << '\t' << config.rm();
+        cout << "\t-" << config.rm();
         for(int i = 0; i < files.size(); i++)
         {
             cout << ' ';
