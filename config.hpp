@@ -8,7 +8,6 @@
 #include <vector>
 #include <stdlib.h>
 #include "file.hpp"
-using namespace std;
 #if 0
 using namespace boost::filesystem;
 #endif
@@ -16,8 +15,9 @@ using namespace boost::filesystem;
 class config_t
 {
 private:
-    void read_file(const string& file)
+    void read_file(const std::string& file)
     {
+        using namespace std;
         vector<string> lines;
         if(read_all_lines(file, lines))
         {
@@ -67,33 +67,33 @@ private:
             _cc_c = _cc + " -c";
     }
 
-    string _cc_m;
-    string _cc_c;
-    string _cc;
-    string _cc_flag;
-    string _dlink;
-    string _list;
-    string _main;
-    string _objs;
-    string _out;
-    string _dlibs;
-    string _rm;
+    std::string _cc_m;
+    std::string _cc_c;
+    std::string _cc;
+    std::string _cc_flag;
+    std::string _dlink;
+    std::string _list;
+    std::string _main;
+    std::string _objs;
+    std::string _out;
+    std::string _dlibs;
+    std::string _rm;
 
-    const static string default_cc_m;
-    const static string default_cc_c;
-    const static string default_cc;
-    const static string default_cc_flag;
-    const static string default_dlink;
-    const static string default_list;
-    const static string default_main;
-    const static string default_objs;
-    const static string default_out;
-    const static string default_dlibs;
-    const static string default_rm;
+    const static std::string default_cc_m;
+    const static std::string default_cc_c;
+    const static std::string default_cc;
+    const static std::string default_cc_flag;
+    const static std::string default_dlink;
+    const static std::string default_list;
+    const static std::string default_main;
+    const static std::string default_objs;
+    const static std::string default_out;
+    const static std::string default_dlibs;
+    const static std::string default_rm;
 
 public:
 #define return_value(x) \
-    const string& x() const { \
+    const std::string& x() const { \
         return (_##x.empty() ? default_##x : _##x); }
     return_value(cc_m);
     return_value(cc_c);
@@ -110,6 +110,7 @@ public:
 
     config_t()
     {
+        using namespace std;
         const char* autocompile = ".autocompile";
 #if 0
         path file_path(string(".") + autocompile);
@@ -136,15 +137,15 @@ public:
     }
 } config;
 
-const string config_t::default_cc_m = "g++ -M";
-const string config_t::default_cc_c = "g++ -c %1% -o %2%";
-const string config_t::default_cc = "g++ %1% -o %2%";
-const string config_t::default_cc_flag = "";
-const string config_t::default_dlink = "-l";
-const string config_t::default_list = "ls -1 *.cpp *.c";
-const string config_t::default_main = "main.cpp";
-const string config_t::default_objs = "";
-const string config_t::default_out = "main";
-const string config_t::default_dlibs = "";
-const string config_t::default_rm = "rm";
+const std::string config_t::default_cc_m = "g++ -M";
+const std::string config_t::default_cc_c = "g++ -c %1% -o %2%";
+const std::string config_t::default_cc = "g++ %1% -o %2%";
+const std::string config_t::default_cc_flag = "";
+const std::string config_t::default_dlink = "-l";
+const std::string config_t::default_list = "ls -1 *.cpp *.c";
+const std::string config_t::default_main = "main.cpp";
+const std::string config_t::default_objs = "";
+const std::string config_t::default_out = "main";
+const std::string config_t::default_dlibs = "";
+const std::string config_t::default_rm = "rm";
 

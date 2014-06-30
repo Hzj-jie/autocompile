@@ -2,10 +2,10 @@
 #pragma once
 #include <fstream>
 #include <string>
-using namespace std;
 
 namespace
 {
+    using namespace std;
     static bool read_all_lines(ifstream& is, vector<string>& o)
     {
         if(is)
@@ -19,16 +19,18 @@ namespace
     }
 }
 
-static bool read_all_lines(const string& file, vector<string>& o)
+static bool read_all_lines(const std::string& file, std::vector<std::string>& o)
 {
+    using namespace std;
     ifstream is(file, ifstream::in);
     bool r = read_all_lines(is, o);
     is.close();
     return r;
 }
 
-static string replace_suffix(const string& s, const string& new_suffix)
+static string replace_suffix(const std::string& s, const std::string& new_suffix)
 {
+    using namespace std;
     int i = s.find_last_of('.');
     if(i == string::npos)
         return s;
