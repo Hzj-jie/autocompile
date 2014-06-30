@@ -40,7 +40,13 @@ static bool print_dependence(const string& file,
                              bool nl_last)
 {
     vector<string> out;
-    if(process_output2(config.cc_m() + " " + file, out) &&
+    string cmd = config.cc_m() + " " + file;
+    if(!config.cc_flag().empty())
+    {
+        cmd += " ";
+        cmd += config.cc_flag();
+    }
+    if(process_output2(cmd, out) &&
        !out.empty())
     {
         if(!replace_target_from.empty() &&
