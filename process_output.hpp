@@ -7,7 +7,7 @@
 #include <fstream>
 #include "file.hpp"
 
-struct system_available_t
+const static struct system_available_t
 {
 private:
     bool v;
@@ -17,11 +17,14 @@ public:
         return v;
     }
 
+    static const system_available_t instance;
+
+private:
     system_available_t()
     {
         v = (system(nullptr) != 0);
     }
-} system_available;
+} &system_available = system_available_t::instance;
 
 static bool process_output(const std::string& cmd, std::vector<std::string>& output, std::vector<std::string>& error)
 {

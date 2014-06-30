@@ -12,7 +12,7 @@
 using namespace boost::filesystem;
 #endif
 
-class config_t
+static const class config_t
 {
 private:
     void read_file(const std::string& file)
@@ -108,6 +108,8 @@ public:
     return_value(rm);
 #undef return_value
 
+    static const config_t instance;
+private:
     config_t()
     {
         using namespace std;
@@ -135,17 +137,5 @@ public:
         }
         read_file(autocompile);
     }
-} config;
-
-const std::string config_t::default_cc_m = "g++ -M";
-const std::string config_t::default_cc_c = "g++ -c %1% -o %2%";
-const std::string config_t::default_cc = "g++ %1% -o %2%";
-const std::string config_t::default_cc_flag = "";
-const std::string config_t::default_dlink = "-l";
-const std::string config_t::default_list = "ls -1 *.cpp *.c";
-const std::string config_t::default_main = "main.cpp";
-const std::string config_t::default_objs = "";
-const std::string config_t::default_out = "main";
-const std::string config_t::default_dlibs = "";
-const std::string config_t::default_rm = "rm";
+} &config = config_t::instance;
 
