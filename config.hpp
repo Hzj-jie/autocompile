@@ -8,6 +8,7 @@
 #include <vector>
 #include <stdlib.h>
 #include "file.hpp"
+#include "strutils.hpp"
 #if 0
 using namespace boost::filesystem;
 #endif
@@ -26,17 +27,8 @@ private:
                 const string& s = lines[i];
                 if(!s.empty())
                 {
-                    size_t p = s.find_first_of(" \t");
                     string k, v;
-                    if(p == string::npos)
-                    {
-                        k = s;
-                    }
-                    else
-                    {
-                        k = s.substr(0, p);
-                        v = s.substr(p + 1);
-                    }
+                    split(s, k, v);
                     if(k == "cc_m")
                         _cc_m = v;
                     else if(k == "cc_c")
@@ -59,6 +51,10 @@ private:
                         _dlibs = v;
                     else if(k == "rm")
                         _rm = v;
+                    else if(k == "list_dir")
+                        _list_dir = v;
+                    else if(k == "list_makefile")
+                        _list_makefile = v;
                 }
             }
         }
@@ -78,6 +74,8 @@ private:
     std::string _out;
     std::string _dlibs;
     std::string _rm;
+    std::string _list_dir;
+    std::string _list_makefile;
 
     const static std::string default_cc_m;
     const static std::string default_cc_c;
@@ -90,6 +88,8 @@ private:
     const static std::string default_out;
     const static std::string default_dlibs;
     const static std::string default_rm;
+    const static std::string default_list_dir;
+    const static std::string default_list_makefile;
 
 public:
 #define return_value(x) \
@@ -106,6 +106,8 @@ public:
     return_value(out);
     return_value(dlibs);
     return_value(rm);
+    return_value(list_dir);
+    return_value(list_makefile);
 #undef return_value
 
     static const config_t instance;

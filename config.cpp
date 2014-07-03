@@ -14,5 +14,7 @@ const string config_t::default_objs = "";
 const string config_t::default_out = "main";
 const string config_t::default_dlibs = "";
 const string config_t::default_rm = "rm";
+const string config_t::default_list_dir = "find . -maxdepth 1 -mindepth 1 -type d -printf %P\\\\n";
+const string config_t::default_list_makefile = "ls -1 Makefile makefile GNUmakefile";
 const config_t config_t::instance;
 

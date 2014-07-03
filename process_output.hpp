@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 #include "file.hpp"
 
 const static struct system_available_t
@@ -43,5 +44,29 @@ static bool process_output(const std::string& cmd, std::vector<std::string>& out
         return r;
     }
     else return false;
+}
+
+static bool process_output(const std::string& s, std::vector<std::string>& out)
+{
+    using namespace std;
+    vector<string> err;
+    if(process_output(s, out, err))
+    {
+        if(!err.empty())
+        {
+            cerr << "error detected when running " << s << endl;
+            for(int i = 0; i < err.size(); i++)
+            {
+                cerr << "l(" << i << ") " << err[i] << endl;
+            }
+            cerr << "usually this does not show a problem, just as a reference" << endl;
+        }
+        return true;
+    }
+    else
+    {
+        cerr << "failed to run command " << s << endl;
+        return false;
+    }
 }
 
