@@ -15,7 +15,7 @@ namespace
             while(getline(is, i)) o.push_back(i);
             return true;
         }
-        else return false;
+        else return !is.bad();
     }
 }
 

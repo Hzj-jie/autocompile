@@ -3,15 +3,19 @@
 #include <vector>
 #include <string>
 #include <thread>
+#include <boost/format.hpp>
 #include <mutex>
 #include "process_output.hpp"
 #include "config.hpp"
 #include "dirs.hpp"
 using namespace std;
+using namespace boost;
 
 static const int RUN_COMMAND_FAILURE = -1;
 static const int CYCLIC_DEPENDENCIES = -2;
 
+static bool verify = false;
+static bool clean = false;
 static vector<string> targets;
 static vector<vector<bool> > deps;
 static mutex mtx;
@@ -24,7 +28,7 @@ static bool init_targets()
     {
         for(int i = 0; i < d.size(); i++)
         {
-            if(dirs.ignores.find(d[i]) == dirs.ignores.end())
+            if(dirs.ignores().find(d[i]) == dirs.ignores().end())
                 targets.push_back(d[i]);
         }
 
@@ -35,11 +39,15 @@ static bool init_targets()
             for(int j = 0; j < deps[i].size(); j++)
                 deps[i][j] = false;
             deps[i][i] = true;
-            const set<string>& cdeps = dirs.deps[targets[i]];
-            for(int j = 0; j < targets.size(); j++)
+            auto it = dirs.deps().find(targets[i]);
+            if(it != dirs.deps().end())
             {
-                if(i != j && cdeps.find(targets[j]) != cdeps.end())
-                    deps[i][j] = true;
+                const set<string>& cdeps = (*it).second;
+                for(int j = 0; j < targets.size(); j++)
+                {
+                    if(i != j && cdeps.find(targets[j]) != cdeps.end())
+                        deps[i][j] = true;
+                }
             }
         }
 
@@ -54,13 +62,84 @@ static void mark_deps(int i)
         deps[j][i] = false;
 }
 
+static string merge_command(const string& path, const string& cmd)
+{
+    return (format(config.command_surround()) %
+                   (format(config.command_separator()) %
+                           (format(config.cd()) % path).str() %
+                           cmd).str()).str();
+}
+
+static bool process_output(const string& path,
+                           const string& cmd,
+                           vector<string>& o)
+{
+    return process_output(merge_command(path, cmd), o);
+}
+
+static bool has_makefile(const string& p)
+{
+    vector<string> o;
+    return process_output(p, config.list_makefile(), o) &&
+           !o.empty();
+}
+
+static void run_cmd(int id, const string& p, const string& cmd, const string& cmd_clean)
+{
+    string c = merge_command(p, clean ? cmd_clean : cmd);
+    cout << id << ": " << c << endl;
+    if(system_available && !verify)
+        system(c.c_str());
+}
+
+static void run_make(int id, const string& p)
+{
+    run_cmd(id, p, config.make(), config.make_clean());
+}
+
+static void run_maketree(int id, const string& p)
+{
+    run_cmd(id, p, config.maketree(), config.maketree_clean());
+}
+
 static void run(int id)
 {
     while(1)
     {
+        int selected = -1;
         {
             unique_lock<mutex> lck(mtx);
-            // TODO: not finished
+            for(int i = 0; i < deps.size(); i++)
+            {
+                if(deps[i][i])
+                {
+                    int j;
+                    for(j = 0; j < deps[i].size(); j++)
+                    {
+                        if(i != j && deps[i][j])
+                            break;
+                    }
+                    if(j == deps[i].size())
+                    {
+                        selected = i;
+                        deps[i][i] = false;
+                        break;
+                    }
+                }
+            }
+        }
+        if(selected >= 0)
+        {
+            cerr << "thread " << id << " starts target " << targets[selected] << endl;
+            if(has_makefile(targets[selected]))
+                run_make(id, targets[selected]);
+            else run_maketree(id, targets[selected]);
+            mark_deps(selected);
+        }
+        else
+        {
+            cerr << "no more targets to run, thread " << id << " finished" << endl;
+            break;
         }
     }
 }
@@ -69,7 +148,8 @@ static bool dfs(int pos, vector<bool>& visited, vector<bool>& allvisited)
 {
     if(allvisited[pos])
     {
-        pos /= (pos - pos);
+        pos -= pos;
+        pos /= pos;
         return false;
     }
     else
@@ -78,20 +158,21 @@ static bool dfs(int pos, vector<bool>& visited, vector<bool>& allvisited)
         visited[pos] = true;
         for(int i = 0; i < deps.size(); i++)
         {
-            if(deps[pos][i])
+            if(i != pos && !allvisited[i] && deps[pos][i])
             {
                 if(visited[i] ||
                    dfs(i, visited, allvisited)) return true;
             }
         }
         visited[pos] = false;
+        return false;
     }
 }
 
 static bool check_deadlock()
 {
     vector<bool> visited(deps.size());
-    allvisited<bool> allvisited(deps.size());
+    vector<bool> allvisited(deps.size());
     for(int i = 0; i < deps.size(); i++)
     {
         if(!allvisited[i] && dfs(i, visited, allvisited))
@@ -112,10 +193,17 @@ int main(int argc, const char* const* const argv)
         else
         {
             int con = thread::hardware_concurrency();
-            if(argc > 1)
+            for(int i = 1; i < argc; i++)
             {
-                int v;
-                if(from_str(argv[1], v)) con = v;
+                if(string("-v") == argv[i])
+                    verify = true;
+                else if(string("-c") == argv[i])
+                    clean = true;
+                else
+                {
+                    int v;
+                    if(from_str(argv[1], v)) con = v;
+                }
             }
             vector<thread> threads;
             for(int i = 0; i < con - 1; i++)

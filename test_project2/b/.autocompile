@@ -1,0 +1,5 @@
+
+main b.cpp
+out b
+objs ../a/a.o ../c/c.o
+

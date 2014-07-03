@@ -7,11 +7,11 @@
 #include "file.hpp"
 #include "strutils.hpp"
 
-static const dirs_t
+static const class dirs_t
 {
 private:
-    std::set<std::string> ignores;
-    std::map<std::string, std::set<std::string> > deps;
+    std::set<std::string> _ignores;
+    std::map<std::string, std::set<std::string> > _deps;
 
     void read_file(const std::string& file)
     {
@@ -25,7 +25,7 @@ private:
                 if(!s.empty() && s[0] != '#')
                 {
                     if(s[0] == '-')
-                        ignores.insert(s.substr(1));
+                        _ignores.insert(s.substr(1));
                     else
                     {
                         string k, v;
@@ -34,7 +34,7 @@ private:
                             trim(v);
                             vector<string> d;
                             split(v, d);
-                            deps[k].insert(deps[k].end(), d.begin(), d.end());
+                            _deps[k].insert(d.begin(), d.end());
                         }
                         else cerr << "unknown command " << s << " in file " << file << ", ignore" << endl;
                     }
@@ -49,10 +49,20 @@ private:
     }
 
 public:
-    static const& dirs_t instance()
+    static const dirs_t& instance()
     {
         static const dirs_t i;
         return i;
+    }
+
+    const std::set<std::string>& ignores() const
+    {
+        return _ignores;
+    }
+
+    const std::map<std::string, std::set<std::string> >& deps() const
+    {
+        return _deps;
     }
 }& dirs = dirs_t::instance();
 

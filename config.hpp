@@ -55,6 +55,20 @@ private:
                         _list_dir = v;
                     else if(k == "list_makefile")
                         _list_makefile = v;
+                    else if(k == "cd")
+                        _cd = v;
+                    else if(k == "command_separator")
+                        _command_separator = v;
+                    else if(k == "make")
+                        _make = v;
+                    else if(k == "maketree")
+                        _maketree = v;
+                    else if(k == "make_clean")
+                        _make_clean = v;
+                    else if(k == "maketree_clean")
+                        _maketree_clean = v;
+                    else if(k == "command_surround")
+                        _command_surround = v;
                 }
             }
         }
@@ -76,6 +90,13 @@ private:
     std::string _rm;
     std::string _list_dir;
     std::string _list_makefile;
+    std::string _cd;
+    std::string _command_separator;
+    std::string _make;
+    std::string _maketree;
+    std::string _make_clean;
+    std::string _maketree_clean;
+    std::string _command_surround;
 
     const static std::string default_cc_m;
     const static std::string default_cc_c;
@@ -90,6 +111,13 @@ private:
     const static std::string default_rm;
     const static std::string default_list_dir;
     const static std::string default_list_makefile;
+    const static std::string default_cd;
+    const static std::string default_command_separator;
+    const static std::string default_make;
+    const static std::string default_maketree;
+    const static std::string default_make_clean;
+    const static std::string default_maketree_clean;
+    const static std::string default_command_surround;
 
 public:
 #define return_value(x) \
@@ -108,6 +136,13 @@ public:
     return_value(rm);
     return_value(list_dir);
     return_value(list_makefile);
+    return_value(cd);
+    return_value(command_separator);
+    return_value(make);
+    return_value(maketree);
+    return_value(make_clean);
+    return_value(maketree_clean);
+    return_value(command_surround);
 #undef return_value
 
     static const config_t instance;

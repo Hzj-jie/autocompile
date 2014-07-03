@@ -80,7 +80,7 @@ static bool split(const std::string& s, std::string& first, std::string& second)
 template <typename T>
 static bool from_str(const std::string& s, T& o)
 {
-    istreamstream convert(s);
+    istringstream convert(s);
     return (convert >> o);
 }
 
