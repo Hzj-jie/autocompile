@@ -1,6 +1,7 @@
 
 #include "../a/a.h"
 #include "../c/c.h"
+#include "../d/d/d.hpp"
 
 int main()
 {
@@ -8,5 +9,6 @@ int main()
     func2();
     func3();
     func4();
+    func5();
 }
 

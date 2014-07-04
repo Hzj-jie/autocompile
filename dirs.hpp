@@ -19,7 +19,7 @@ private:
         vector<string> lines;
         if(read_all_lines(file, lines))
         {
-            for(int i = 0; i < lines.size(); i++)
+            for(size_t i = 0; i < lines.size(); i++)
             {
                 const string& s = lines[i];
                 if(!s.empty() && s[0] != '#')

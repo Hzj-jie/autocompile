@@ -31,7 +31,7 @@ static bool read_all_lines(const std::string& file, std::vector<std::string>& o)
 static string replace_suffix(const std::string& s, const std::string& new_suffix)
 {
     using namespace std;
-    int i = s.find_last_of('.');
+    size_t i = s.find_last_of('.');
     if(i == string::npos)
         return s;
     else

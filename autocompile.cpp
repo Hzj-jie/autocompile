@@ -29,18 +29,19 @@ static bool print_dependence(const string& file,
         if(!replace_target_from.empty() &&
            !replace_target_to.empty())
         {
-            int i = out[0].find(replace_target_from);
+            size_t i = out[0].find(replace_target_from);
             if(i != string::npos)
             {
                 out[0].replace(i, replace_target_from.length(), replace_target_to);
             }
         }
-        for(int j = 0; j < out.size(); j++)
+        for(size_t j = 0; j < out.size(); j++)
         {
             cout << out[j];
             if(nl_last || j < out.size() - 1)
                 cout << endl;
         }
+        return true;
     }
     else return false;
 }
@@ -81,7 +82,7 @@ int main()
              << endl
              << endl;
         cout << "all:";
-        for(int i = 0; i < files.size(); i++)
+        for(size_t i = 0; i < files.size(); i++)
         {
             cout << " \\" << endl << " ";
             if(files[i] == config.main())
@@ -92,7 +93,7 @@ int main()
         cout << endl << endl;
 
         bool has_main = false;
-        for(int i = 0; i < files.size(); i++)
+        for(size_t i = 0; i < files.size(); i++)
         {
             if(files[i] != config.main())
             {
@@ -113,16 +114,16 @@ int main()
             if(print_dependence(config.main(), to_obj(config.main()), config.out(), false))
             {
                 vector<string> deps;
-                for(int i = 0; i < files.size(); i++)
+                for(size_t i = 0; i < files.size(); i++)
                 {
                     if(files[i] != config.main())
                         deps.push_back(to_obj(files[i]));
                 }
-                for(int i = 0; i < deps.size(); i++)
+                for(size_t i = 0; i < deps.size(); i++)
                     cout << " \\" << endl << ' ' << deps[i];
                 vector<string> objs;
                 split(config.objs(), objs);
-                for(int i = 0; i < objs.size(); i++)
+                for(size_t i = 0; i < objs.size(); i++)
                     cout << " \\" << endl << ' ' << objs[i];
 
                 string o = str(format(config.cc()) % config.main() % config.out());
@@ -134,11 +135,11 @@ int main()
 
                 vector<string> dlibs;
                 split(config.dlibs(), dlibs);
-                for(int i = 0; i < dlibs.size(); i++)
+                for(size_t i = 0; i < dlibs.size(); i++)
                     append_dlink(o, dlibs[i]);
-                for(int i = 0; i < objs.size(); i++)
+                for(size_t i = 0; i < objs.size(); i++)
                     append_link(o, objs[i]);
-                for(int i = 0; i < deps.size(); i++)
+                for(size_t i = 0; i < deps.size(); i++)
                     append_link(o, deps[i]);
                 cout << endl << '\t' << o << endl << endl;
             }
@@ -147,7 +148,7 @@ int main()
 
         cout << "clean:" << endl;
         cout << "\t-" << config.rm();
-        for(int i = 0; i < files.size(); i++)
+        for(size_t i = 0; i < files.size(); i++)
         {
             cout << ' ';
             if(files[i] == config.main())

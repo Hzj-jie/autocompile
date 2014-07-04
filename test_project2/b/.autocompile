@@ -1,5 +1,5 @@
 
 main b.cpp
 out b
-objs ../a/a.o ../c/c.o
+objs ../a/a.o ../c/c.o ../d/d/d.o
 

@@ -4,10 +4,9 @@
 # so change the configuration file or autocompile logic is prefered
 
 all: \
- b
+ d.o
 
-b: b.cpp /usr/include/stdc-predef.h ../a/a.h \
- /usr/include/c++/4.8/iostream \
+d.o: d.cpp /usr/include/stdc-predef.h d.hpp /usr/include/c++/4.8/iostream \
  /usr/include/i386-linux-gnu/c++/4.8/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/4.8/bits/os_defines.h \
  /usr/include/features.h /usr/include/i386-linux-gnu/sys/cdefs.h \
@@ -104,12 +103,9 @@ b: b.cpp /usr/include/stdc-predef.h ../a/a.h \
  /usr/include/c++/4.8/bits/locale_facets.tcc \
  /usr/include/c++/4.8/bits/basic_ios.tcc \
  /usr/include/c++/4.8/bits/ostream.tcc /usr/include/c++/4.8/istream \
- /usr/include/c++/4.8/bits/istream.tcc ../c/c.h ../d/d/d.hpp \
- ../a/a.o \
- ../c/c.o \
- ../d/d/d.o
-	g++ b.cpp -o b -std=c++11 -Wall ../a/a.o ../c/c.o ../d/d/d.o
+ /usr/include/c++/4.8/bits/istream.tcc
+	g++ -c d.cpp -o d.o -std=c++11 -Wall
 
 clean:
-	-rm b
+	-rm d.o
 

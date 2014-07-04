@@ -6,97 +6,105 @@
 all: \
  a.o
 
-a.o: a.cpp a.h /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/iostream \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/c++config.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/os_defines.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/cpu_defines.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/ostream \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/ios \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/iosfwd \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/stringfwd.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/memoryfwd.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/postypes.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/cwchar \
- /usr/include/wchar.h /usr/include/_ansi.h /usr/include/newlib.h \
- /usr/include/sys/config.h /usr/include/machine/ieeefp.h \
- /usr/include/sys/features.h /usr/include/cygwin/config.h \
- /usr/include/sys/reent.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/stddef.h \
- /usr/include/sys/_types.h /usr/include/machine/_types.h \
- /usr/include/machine/_default_types.h /usr/include/sys/lock.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/stdarg.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/exception \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/atomic_lockfree_defines.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/exception_ptr.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/exception_defines.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/nested_exception.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/char_traits.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/stl_algobase.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/functexcept.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/cpp_type_traits.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/ext/type_traits.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/ext/numeric_traits.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/stl_pair.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/move.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/concept_check.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/type_traits \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/stl_iterator_base_types.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/stl_iterator_base_funcs.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/debug/debug.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/stl_iterator.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/cstdint \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/stdint.h \
- /usr/include/stdint.h /usr/include/bits/wordsize.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/localefwd.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/c++locale.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/clocale \
- /usr/include/locale.h /usr/include/_ansi.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/cctype \
- /usr/include/ctype.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/ios_base.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/ext/atomicity.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/gthr.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/gthr-default.h \
- /usr/include/pthread.h /usr/include/sys/types.h \
- /usr/include/machine/types.h /usr/include/cygwin/types.h \
- /usr/include/endian.h /usr/include/bits/endian.h /usr/include/byteswap.h \
- /usr/include/sys/sysmacros.h /usr/include/signal.h \
- /usr/include/sys/signal.h /usr/include/cygwin/signal.h \
- /usr/include/sched.h /usr/include/sys/sched.h /usr/include/time.h \
- /usr/include/machine/time.h /usr/include/cygwin/time.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/atomic_word.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/locale_classes.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/string \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/allocator.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/c++allocator.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/ext/new_allocator.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/new \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/ostream_insert.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/cxxabi_forced.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/stl_function.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/backward/binders.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/range_access.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/basic_string.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/initializer_list \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/functional_hash.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/hash_bytes.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/basic_string.tcc \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/locale_classes.tcc \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/streambuf \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/streambuf.tcc \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/basic_ios.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/locale_facets.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/cwctype \
+a.o: a.cpp /usr/include/stdc-predef.h a.h /usr/include/c++/4.8/iostream \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/c++config.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/os_defines.h \
+ /usr/include/features.h /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/cpu_defines.h \
+ /usr/include/c++/4.8/ostream /usr/include/c++/4.8/ios \
+ /usr/include/c++/4.8/iosfwd /usr/include/c++/4.8/bits/stringfwd.h \
+ /usr/include/c++/4.8/bits/memoryfwd.h \
+ /usr/include/c++/4.8/bits/postypes.h /usr/include/c++/4.8/cwchar \
+ /usr/include/wchar.h /usr/include/stdio.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/wchar.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include/stddef.h /usr/include/xlocale.h \
+ /usr/include/c++/4.8/exception \
+ /usr/include/c++/4.8/bits/atomic_lockfree_defines.h \
+ /usr/include/c++/4.8/bits/exception_ptr.h \
+ /usr/include/c++/4.8/bits/exception_defines.h \
+ /usr/include/c++/4.8/bits/nested_exception.h \
+ /usr/include/c++/4.8/bits/char_traits.h \
+ /usr/include/c++/4.8/bits/stl_algobase.h \
+ /usr/include/c++/4.8/bits/functexcept.h \
+ /usr/include/c++/4.8/bits/cpp_type_traits.h \
+ /usr/include/c++/4.8/ext/type_traits.h \
+ /usr/include/c++/4.8/ext/numeric_traits.h \
+ /usr/include/c++/4.8/bits/stl_pair.h /usr/include/c++/4.8/bits/move.h \
+ /usr/include/c++/4.8/bits/concept_check.h \
+ /usr/include/c++/4.8/type_traits \
+ /usr/include/c++/4.8/bits/stl_iterator_base_types.h \
+ /usr/include/c++/4.8/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/4.8/debug/debug.h \
+ /usr/include/c++/4.8/bits/stl_iterator.h /usr/include/c++/4.8/cstdint \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
+ /usr/include/c++/4.8/bits/localefwd.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/c++locale.h \
+ /usr/include/c++/4.8/clocale /usr/include/locale.h \
+ /usr/include/i386-linux-gnu/bits/locale.h /usr/include/c++/4.8/cctype \
+ /usr/include/ctype.h /usr/include/i386-linux-gnu/bits/types.h \
+ /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/endian.h \
+ /usr/include/i386-linux-gnu/bits/endian.h \
+ /usr/include/i386-linux-gnu/bits/byteswap.h \
+ /usr/include/i386-linux-gnu/bits/byteswap-16.h \
+ /usr/include/c++/4.8/bits/ios_base.h \
+ /usr/include/c++/4.8/ext/atomicity.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/gthr.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/gthr-default.h \
+ /usr/include/pthread.h /usr/include/sched.h /usr/include/time.h \
+ /usr/include/i386-linux-gnu/bits/sched.h \
+ /usr/include/i386-linux-gnu/bits/time.h \
+ /usr/include/i386-linux-gnu/bits/timex.h \
+ /usr/include/i386-linux-gnu/bits/pthreadtypes.h \
+ /usr/include/i386-linux-gnu/bits/setjmp.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/atomic_word.h \
+ /usr/include/c++/4.8/bits/locale_classes.h /usr/include/c++/4.8/string \
+ /usr/include/c++/4.8/bits/allocator.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/c++allocator.h \
+ /usr/include/c++/4.8/ext/new_allocator.h /usr/include/c++/4.8/new \
+ /usr/include/c++/4.8/bits/ostream_insert.h \
+ /usr/include/c++/4.8/bits/cxxabi_forced.h \
+ /usr/include/c++/4.8/bits/stl_function.h \
+ /usr/include/c++/4.8/backward/binders.h \
+ /usr/include/c++/4.8/bits/range_access.h \
+ /usr/include/c++/4.8/bits/basic_string.h \
+ /usr/include/c++/4.8/initializer_list \
+ /usr/include/c++/4.8/ext/string_conversions.h \
+ /usr/include/c++/4.8/cstdlib /usr/include/stdlib.h \
+ /usr/include/i386-linux-gnu/bits/waitflags.h \
+ /usr/include/i386-linux-gnu/bits/waitstatus.h \
+ /usr/include/i386-linux-gnu/sys/types.h \
+ /usr/include/i386-linux-gnu/sys/select.h \
+ /usr/include/i386-linux-gnu/bits/select.h \
+ /usr/include/i386-linux-gnu/bits/sigset.h \
+ /usr/include/i386-linux-gnu/sys/sysmacros.h /usr/include/alloca.h \
+ /usr/include/i386-linux-gnu/bits/stdlib-float.h \
+ /usr/include/c++/4.8/cstdio /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
+ /usr/include/i386-linux-gnu/bits/sys_errlist.h \
+ /usr/include/c++/4.8/cerrno /usr/include/errno.h \
+ /usr/include/i386-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/i386-linux-gnu/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h \
+ /usr/include/c++/4.8/bits/functional_hash.h \
+ /usr/include/c++/4.8/bits/hash_bytes.h \
+ /usr/include/c++/4.8/bits/basic_string.tcc \
+ /usr/include/c++/4.8/bits/locale_classes.tcc \
+ /usr/include/c++/4.8/streambuf /usr/include/c++/4.8/bits/streambuf.tcc \
+ /usr/include/c++/4.8/bits/basic_ios.h \
+ /usr/include/c++/4.8/bits/locale_facets.h /usr/include/c++/4.8/cwctype \
  /usr/include/wctype.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/ctype_base.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/streambuf_iterator.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/x86_64-pc-cygwin/bits/ctype_inline.h \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/locale_facets.tcc \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/basic_ios.tcc \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/ostream.tcc \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/istream \
- /usr/lib/gcc/x86_64-pc-cygwin/4.8.3/include/c++/bits/istream.tcc
-	g++ -c a.cpp -o a.o -std=c++11
+ /usr/include/i386-linux-gnu/c++/4.8/bits/ctype_base.h \
+ /usr/include/c++/4.8/bits/streambuf_iterator.h \
+ /usr/include/i386-linux-gnu/c++/4.8/bits/ctype_inline.h \
+ /usr/include/c++/4.8/bits/locale_facets.tcc \
+ /usr/include/c++/4.8/bits/basic_ios.tcc \
+ /usr/include/c++/4.8/bits/ostream.tcc /usr/include/c++/4.8/istream \
+ /usr/include/c++/4.8/bits/istream.tcc
+	g++ -c a.cpp -o a.o -std=c++11 -Wall
 
 clean:
 	-rm a.o

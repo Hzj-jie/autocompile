@@ -28,24 +28,24 @@ static bool init_targets()
     vector<string> d;
     if(process_output(config.list_dir(), d))
     {
-        for(int i = 0; i < d.size(); i++)
+        for(size_t i = 0; i < d.size(); i++)
         {
             if(dirs.ignores().find(d[i]) == dirs.ignores().end())
                 targets.push_back(d[i]);
         }
 
         deps.resize(targets.size());
-        for(int i = 0; i < deps.size(); i++) deps[i].resize(targets.size());
-        for(int i = 0; i < deps.size(); i++)
+        for(size_t i = 0; i < deps.size(); i++) deps[i].resize(targets.size());
+        for(size_t i = 0; i < deps.size(); i++)
         {
-            for(int j = 0; j < deps[i].size(); j++)
+            for(size_t j = 0; j < deps[i].size(); j++)
                 deps[i][j] = false;
             deps[i][i] = true;
             auto it = dirs.deps().find(targets[i]);
             if(it != dirs.deps().end())
             {
                 const set<string>& cdeps = (*it).second;
-                for(int j = 0; j < targets.size(); j++)
+                for(size_t j = 0; j < targets.size(); j++)
                 {
                     if(i != j && cdeps.find(targets[j]) != cdeps.end())
                         deps[i][j] = true;
@@ -60,7 +60,7 @@ static bool init_targets()
 
 static void mark_deps(int i)
 {
-    for(int j = 0; j < deps.size(); j++)
+    for(size_t j = 0; j < deps.size(); j++)
         deps[j][i] = false;
 }
 
@@ -89,12 +89,17 @@ static bool has_makefile(const string& p)
 static void run_cmd(int id, const string& p, const string& cmd, const string& cmd_clean)
 {
     string c = merge_command(p, clean ? cmd_clean : cmd);
+    if(system_available && !verify)
+    {
+        int r = system(c.c_str());
+        unique_lock<mutex> lck(omtx);
+        cout << id << ": command " << c << " returns " << r << endl;
+    }
+    else
     {
         unique_lock<mutex> lck(omtx);
         cout << id << ": starts command " << c << endl;
     }
-    if(system_available && !verify)
-        system(c.c_str());
 }
 
 static void run_make(int id, const string& p)
@@ -112,12 +117,12 @@ void select_target(int& selected, int& unfinished)
     selected = -1;
     unfinished = 0;
     unique_lock<mutex> lck(mtx);
-    for(int i = 0; i < deps.size(); i++)
+    for(size_t i = 0; i < deps.size(); i++)
     {
         if(deps[i][i])
         {
             unfinished++;
-            int j;
+            size_t j;
             for(j = 0; j < deps[i].size(); j++)
             {
                 if(i != j && deps[i][j])
@@ -176,7 +181,7 @@ static void run(int id)
     }
 }
 
-static bool dfs(int pos, vector<bool>& visited, vector<bool>& allvisited)
+static bool dfs(size_t pos, vector<bool>& visited, vector<bool>& allvisited)
 {
     if(allvisited[pos])
     {
@@ -188,7 +193,7 @@ static bool dfs(int pos, vector<bool>& visited, vector<bool>& allvisited)
     {
         allvisited[pos] = true;
         visited[pos] = true;
-        for(int i = 0; i < deps.size(); i++)
+        for(size_t i = 0; i < deps.size(); i++)
         {
             if(i != pos && !allvisited[i] && deps[pos][i])
             {
@@ -205,7 +210,7 @@ static bool check_deadlock()
 {
     vector<bool> visited(deps.size());
     vector<bool> allvisited(deps.size());
-    for(int i = 0; i < deps.size(); i++)
+    for(size_t i = 0; i < deps.size(); i++)
     {
         if(!allvisited[i] && dfs(i, visited, allvisited))
             return true;
@@ -227,7 +232,7 @@ int main(int argc, const char* const* const argv)
         }
         else
         {
-            int con = min<size_t>(thread::hardware_concurrency(), targets.size());
+            size_t con = min<size_t>(thread::hardware_concurrency(), targets.size());
             for(int i = 1; i < argc; i++)
             {
                 if(string("-v") == argv[i])
@@ -236,15 +241,15 @@ int main(int argc, const char* const* const argv)
                     clean = true;
                 else
                 {
-                    int v;
+                    size_t v;
                     if(from_str(argv[1], v)) con = v;
                 }
             }
             vector<thread> threads;
-            for(int i = 0; i < con - 1; i++)
+            for(size_t i = 0; i < con - 1; i++)
                 threads.push_back(thread(run, i));
             run(con - 1);
-            for(int i = 0; i < con - 1; i++)
+            for(size_t i = 0; i < con - 1; i++)
                 threads[i].join();
         }
     }

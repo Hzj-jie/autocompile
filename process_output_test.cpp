@@ -17,9 +17,9 @@ int main()
             vector<string> o;
             vector<string> e;
             cout << "process_output " << s << " " << (process_output(s, o, e) ? "true" : "false") << endl;
-            for(int i = 0; i < o.size(); i++)
+            for(size_t i = 0; i < o.size(); i++)
                 cout << "output: " << i << " " << o[i] << endl;
-            for(int i = 0; i < e.size(); i++)
+            for(size_t i = 0; i < e.size(); i++)
                 cout << "error: " << i << " " << e[i] << endl;
         }
         else break;
