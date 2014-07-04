@@ -17,7 +17,7 @@ static bool print_dependence(const string& file,
                              bool nl_last)
 {
     vector<string> out;
-    string cmd = config.cc_m() + " " + file;
+    string cmd = (format(config.cc_m()) % file).str();
     if(!config.cc_flag().empty())
     {
         cmd += " ";
