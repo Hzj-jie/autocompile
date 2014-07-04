@@ -87,7 +87,7 @@ static bool has_makefile(const string& p)
 static void run_cmd(int id, const string& p, const string& cmd, const string& cmd_clean)
 {
     string c = merge_command(p, clean ? cmd_clean : cmd);
-    cout << id << ": " << c << endl;
+    cout << id << ": starts command " << c << endl;
     if(system_available && !verify)
         system(c.c_str());
 }
@@ -130,7 +130,7 @@ static void run(int id)
         }
         if(selected >= 0)
         {
-            cerr << "thread " << id << " starts target " << targets[selected] << endl;
+            cout << id << ": starts target " << targets[selected] << endl;
             if(has_makefile(targets[selected]))
                 run_make(id, targets[selected]);
             else run_maketree(id, targets[selected]);
@@ -138,7 +138,7 @@ static void run(int id)
         }
         else
         {
-            cerr << "no more targets to run, thread " << id << " finished" << endl;
+            cout << id << ": no more targets to run, finished" << endl;
             break;
         }
     }

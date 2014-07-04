@@ -59,8 +59,7 @@ void append_link(string& s, const string& o)
 void append_dlink(string& s, const string& o)
 {
     s.push_back(' ');
-    s.append(config.dlink());
-    s.append(o);
+    s.append((format(config.dlink()) % o).str());
 }
 
 string to_obj(const string& file)
@@ -121,10 +120,10 @@ int main()
                 }
                 for(int i = 0; i < deps.size(); i++)
                     cout << " \\" << endl << ' ' << deps[i];
-                vector<string> dlibs;
-                split(config.dlibs(), dlibs);
-                for(int i = 0; i < dlibs.size(); i++)
-                    cout << " \\" << endl << ' ' << dlibs[i];
+                vector<string> objs;
+                split(config.objs(), objs);
+                for(int i = 0; i < objs.size(); i++)
+                    cout << " \\" << endl << ' ' << objs[i];
 
                 string o = str(format(config.cc()) % config.main() % config.out());
                 if(!config.cc_flag().empty())
@@ -132,8 +131,9 @@ int main()
                     o.push_back(' ');
                     o.append(config.cc_flag());
                 }
-                vector<string> objs;
-                split(config.objs(), objs);
+
+                vector<string> dlibs;
+                split(config.dlibs(), dlibs);
                 for(int i = 0; i < dlibs.size(); i++)
                     append_dlink(o, dlibs[i]);
                 for(int i = 0; i < objs.size(); i++)
