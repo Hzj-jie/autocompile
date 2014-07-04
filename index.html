@@ -1,133 +1,240 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
     <title>Autocompile by Hzj-jie</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/Hzj-jie/autocompile">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/Hzj-jie/autocompile/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/Hzj-jie/autocompile/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <header>
-      <div class="container">
-        <h1>Autocompile</h1>
-        <h2>a tool to help generate makefile</h2>
+    <div class="wrapper">
 
-        <section id="downloads">
-          <a href="https://github.com/Hzj-jie/autocompile/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/Hzj-jie/autocompile/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/Hzj-jie/autocompile" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
+      <section>
+        <div id="title">
+          <h1>Autocompile</h1>
+          <p>a tool to help generate makefile</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/Hzj-jie">Hzj-jie</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
 
-    <div class="container">
-      <section id="main_content">
         <h1>
 <a name="autocompile" class="anchor" href="#autocompile"><span class="octicon octicon-link"></span></a>autocompile</h1>
 
 <p>a tool set to help generate makefile and build a tree structure</p>
 
-<p>this tool set contains two tools,
-1. autocompile
-it goes through current directory to looking for .c and .cpp files, generate dependencies according to g++ -M output, and output makefile to stdout.
-autocompile looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration
-2. maketree
-it goes through current directory to looking for sub folders to compile, if a subfolder contains Makefile / makefile / GNUmakefile, it will call make, otherwise call maketree
-support command line parameters</p>
+<p>this tool set contains two tools,</p>
+
+<ol>
+<li>autocompile</li>
+</ol><p>it goes through current directory to looking for .c and .cpp files, generate dependencies according to g++ -M output, and output makefile to stdout.</p>
+
+<p>autocompile looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration</p>
+
+<ol>
+<li>maketree</li>
+</ol><p>it goes through current directory to looking for sub folders to compile, if a subfolder contains Makefile / makefile / GNUmakefile, it will call make, otherwise call maketree</p>
+
+<p>support command line parameters</p>
 
 <ul>
 <li>-c make clean instead of make</li>
 <li>-v output the commands to run, instead of run them</li>
-<li>an integer, the concurrency, maketree will use at most these threads
-maketree also looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration
-maketree looks for dirs file in current folder to decide the folders ignored, and the dependencies between the folders</li>
-</ul><p>usually you do not need to change anything to let autocompile and maketree work in linux or cygwin environments, except for these parameters
-in .autocompile file</p>
+<li>an integer, the concurrency, maketree will use at most these threads</li>
+</ul><p>maketree also looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration</p>
+
+<p>maketree looks for dirs file in current folder to decide the folders ignored, and the dependencies between the folders</p>
+
+<p>usually you do not need to change anything to let autocompile and maketree work in linux or cygwin environments, except for these parameters</p>
+
+<p>in .autocompile file</p>
 
 <ul>
 <li>main</li>
-<li>out
-if you need to build a binary instead of object files from a source file, the detail of these parameters are in the follow section
-in dirs file</li>
-<li>folder1:folder2 folder3
-if folder1 depends on folder2 and folder3, i.e. folder1 can only be built after folder2 and folder3</li>
-</ul><p>.autocompile can include</p>
+<li>out</li>
+</ul><p>if you need to build a binary instead of object files from a source file, the detail of these parameters are in the follow section</p>
+
+<p>in dirs file</p>
 
 <ul>
-<li>cc-m
-the g++ -M command as boost::format string, default value is g++ -M %1%
-alias cc_m, compiler-dependency, compiler-dependencies, cc_M, cc-M</li>
-<li>cc-c
-the g++ -c command as boost::format string, default value is g++ -c %1% -o %2%
-alias cc_c, compile</li>
-<li>cc
-the g++ command as boost::format string, default value is g++ %1% -o %2%
-alias compile-link</li>
-<li>cc-flag
-extra g++ options, default value is -std=c++11
-alias cc_flag, compiler-flag, compiler-option</li>
-<li>dlink
-the dynamic linking command for the compiler as boost::format string, default value is -l%1%
-alias dynamic-link</li>
-<li>list
-the system command to list .c and .cpp file, default value is ls -1 *.cpp *.c</li>
-<li>main
-the name of the cpp file contains main, if this file is existing, the makefile will compile and link it, default value is main.cpp</li>
-<li>objs
-the static libs link to the binary generated, separated by ',' ' ' or ';', default value is empty
-alias libs, static-libs</li>
-<li>out
-the output file name of the binary generated, default value is main
-alias output</li>
-<li>dlibs
-the dynamic libs link to the binary generated, separated by ',' ' ' or ';', default value is empty
-alias dynamic-libs</li>
-<li>rm
-the system command to remove several files, default value is rm
-alias remove</li>
-<li>list-dir
-the system command to list all directories in a folder, default value is find . -maxdepth 1 -mindepth 1 -type d -printf %P\n
-alias list_dir</li>
-<li>list-makefile
-the system command to list makefile in a folder, default value is ls -1 Makefile makefile GNUmakefile
-alias list_makefile</li>
-<li>cd
-the system command to change current directory as boost::format string, default value is cd %1%</li>
-<li>command-separator
-the system defined character to run several commands serially as boost::format string, default value is %1% ; %2%
-alias command_separator</li>
-<li>make
-the make command to run makefile, default value is make</li>
-<li>maketree
-the maketree command to run maketree in a folder, default value is maketree</li>
-<li>make-clean
-the make clean command to run clean target in a makefile, default value is make clean
-alias make_clean</li>
-<li>maketree-clean
-the maketree clean command to run in a folder, default value is maketree -c
-alias maketree_clean</li>
-<li>command-surround
-the system defined method to surround several serial command in boost::format string, default value is (%1%)
-alias command_surround</li>
+<li>folder1:folder2 folder3</li>
+</ul><p>if folder1 depends on folder2 and folder3, i.e. folder1 can only be built after folder2 and folder3</p>
+
+<p>.autocompile can include</p>
+
+<ul>
+<li>
+<p>cc-m</p>
+
+<p>the g++ -M command as boost::format string, default value is g++ -M %1%</p>
+
+<p>alias cc_m, compiler-dependency, compiler-dependencies, cc_M, cc-M</p>
+</li>
+<li>
+<p>cc-c</p>
+
+<p>the g++ -c command as boost::format string, default value is g++ -c %1% -o %2%</p>
+
+<p>alias cc_c, compile</p>
+</li>
+<li>
+<p>cc</p>
+
+<p>the g++ command as boost::format string, default value is g++ %1% -o %2%</p>
+
+<p>alias compile-link</p>
+</li>
+<li>
+<p>cc-flag</p>
+
+<p>extra g++ options, default value is -std=c++11</p>
+
+<p>alias cc_flag, compiler-flag, compiler-option</p>
+</li>
+<li>
+<p>dlink</p>
+
+<p>the dynamic linking command for the compiler as boost::format string, default value is -l%1%</p>
+
+<p>alias dynamic-link</p>
+</li>
+<li>
+<p>list</p>
+
+<p>the system command to list .c and .cpp file, default value is ls -1 *.cpp *.c</p>
+</li>
+<li>
+<p>main</p>
+
+<p>the name of the cpp file contains main, if this file is existing, the makefile will compile and link it, default value is main.cpp</p>
+</li>
+<li>
+<p>objs</p>
+
+<p>the static libs link to the binary generated, separated by ',' ' ' or ';', default value is empty</p>
+
+<p>alias libs, static-libs</p>
+</li>
+<li>
+<p>out</p>
+
+<p>the output file name of the binary generated, default value is main</p>
+
+<p>alias output</p>
+</li>
+<li>
+<p>dlibs</p>
+
+<p>the dynamic libs link to the binary generated, separated by ',' ' ' or ';', default value is empty</p>
+
+<p>alias dynamic-libs</p>
+</li>
+<li>
+<p>rm</p>
+
+<p>the system command to remove several files, default value is rm</p>
+
+<p>alias remove</p>
+</li>
+<li>
+<p>list-dir</p>
+
+<p>the system command to list all directories in a folder, default value is find . -maxdepth 1 -mindepth 1 -type d -printf %P\n</p>
+
+<p>alias list_dir</p>
+</li>
+<li>
+<p>list-makefile</p>
+
+<p>the system command to list makefile in a folder, default value is ls -1 Makefile makefile GNUmakefile</p>
+
+<p>alias list_makefile</p>
+</li>
+<li>
+<p>cd</p>
+
+<p>the system command to change current directory as boost::format string, default value is cd %1%</p>
+</li>
+<li>
+<p>command-separator</p>
+
+<p>the system defined character to run several commands serially as boost::format string, default value is %1% ; %2%</p>
+
+<p>alias command_separator</p>
+</li>
+<li>
+<p>make</p>
+
+<p>the make command to run makefile, default value is make</p>
+</li>
+<li>
+<p>maketree</p>
+
+<p>the maketree command to run maketree in a folder, default value is maketree</p>
+</li>
+<li>
+<p>make-clean</p>
+
+<p>the make clean command to run clean target in a makefile, default value is make clean</p>
+
+<p>alias make_clean</p>
+</li>
+<li>
+<p>maketree-clean</p>
+
+<p>the maketree clean command to run in a folder, default value is maketree -c</p>
+
+<p>alias maketree_clean</p>
+</li>
+<li>
+<p>command-surround</p>
+
+<p>the system defined method to surround several serial command in boost::format string, default value is (%1%)</p>
+
+<p>alias command_surround</p>
+</li>
 </ul><p>dirs can include</p>
 
 <ul>
-<li>-folder
-remove folder from build targets in current directory</li>
-<li>folder1:folder2 folder3
-folder1 depends on folder2 and folder3
-you can also write this line as
-folder1 folder2 folder3</li>
+<li>
+<p>-folder</p>
+
+<p>remove folder from build targets in current directory</p>
+</li>
+<li>
+<p>folder1:folder2 folder3</p>
+
+<p>folder1 depends on folder2 and folder3</p>
+
+<p>you can also write this line as</p>
+
+<p>folder1 folder2 folder3</p>
+</li>
 </ul>
       </section>
-    </div>
 
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
