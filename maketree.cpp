@@ -5,6 +5,7 @@
 #include <thread>
 #include <boost/format.hpp>
 #include <mutex>
+#include <chrono>
 #include "process_output.hpp"
 #include "config.hpp"
 #include "dirs.hpp"
@@ -19,6 +20,7 @@ static bool clean = false;
 static vector<string> targets;
 static vector<vector<bool> > deps;
 static mutex mtx;
+static mutex omtx;
 
 static bool init_targets()
 {
@@ -87,7 +89,10 @@ static bool has_makefile(const string& p)
 static void run_cmd(int id, const string& p, const string& cmd, const string& cmd_clean)
 {
     string c = merge_command(p, clean ? cmd_clean : cmd);
-    cout << id << ": starts command " << c << endl;
+    {
+        unique_lock<mutex> lck(omtx);
+        cout << id << ": starts command " << c << endl;
+    }
     if(system_available && !verify)
         system(c.c_str());
 }
@@ -102,44 +107,71 @@ static void run_maketree(int id, const string& p)
     run_cmd(id, p, config.maketree(), config.maketree_clean());
 }
 
+void select_target(int& selected, int& unfinished)
+{
+    selected = -1;
+    unfinished = 0;
+    unique_lock<mutex> lck(mtx);
+    for(int i = 0; i < deps.size(); i++)
+    {
+        if(deps[i][i])
+        {
+            unfinished++;
+            int j;
+            for(j = 0; j < deps[i].size(); j++)
+            {
+                if(i != j && deps[i][j])
+                    break;
+            }
+            if(j == deps[i].size())
+            {
+                selected = i;
+                deps[i][i] = false;
+                break;
+            }
+        }
+    }
+}
+
 static void run(int id)
 {
     while(1)
     {
         int selected = -1;
-        {
-            unique_lock<mutex> lck(mtx);
-            for(int i = 0; i < deps.size(); i++)
-            {
-                if(deps[i][i])
-                {
-                    int j;
-                    for(j = 0; j < deps[i].size(); j++)
-                    {
-                        if(i != j && deps[i][j])
-                            break;
-                    }
-                    if(j == deps[i].size())
-                    {
-                        selected = i;
-                        deps[i][i] = false;
-                        break;
-                    }
-                }
-            }
-        }
+        int unfinished = 0;
+        select_target(selected, unfinished);
         if(selected >= 0)
         {
-            cout << id << ": starts target " << targets[selected] << endl;
+            {
+                unique_lock<mutex> lck(omtx);
+                cout << id << ": starts target " << targets[selected] << endl;
+            }
             if(has_makefile(targets[selected]))
                 run_make(id, targets[selected]);
             else run_maketree(id, targets[selected]);
             mark_deps(selected);
         }
+        else if(unfinished <= id)
+        {
+            {
+                unique_lock<mutex> lck(omtx);
+                cout << id << ": no more targets to run, finished" << endl;
+            }
+            break;
+        }
         else
         {
-            cout << id << ": no more targets to run, finished" << endl;
-            break;
+            {
+                unique_lock<mutex> lck(omtx);
+                cout << id << ": pending dependencies to finish" << endl;
+            }
+            using namespace std::chrono;
+            while(1)
+            {
+                select_target(selected, unfinished);
+                if(selected >= 0 || unfinished <= id) break;
+                else this_thread::sleep_for(seconds(1));
+            }
         }
     }
 }
@@ -187,12 +219,15 @@ int main(int argc, const char* const* const argv)
     {
         if(check_deadlock())
         {
-            cerr << "cyclic dependencies detected" << endl;
+            {
+                unique_lock<mutex> lck(omtx);
+                cerr << "cyclic dependencies detected" << endl;
+            }
             return CYCLIC_DEPENDENCIES;
         }
         else
         {
-            int con = thread::hardware_concurrency();
+            int con = min<size_t>(thread::hardware_concurrency(), targets.size());
             for(int i = 1; i < argc; i++)
             {
                 if(string("-v") == argv[i])

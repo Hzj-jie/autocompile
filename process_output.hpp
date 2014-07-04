@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <mutex>
 #include "file.hpp"
 
 const static struct system_available_t
@@ -46,7 +47,9 @@ static bool process_output(const std::string& cmd, std::vector<std::string>& out
     else return false;
 }
 
-static bool process_output(const std::string& s, std::vector<std::string>& out)
+static bool process_output(const std::string& s,
+                           std::vector<std::string>& out,
+                           std::mutex* mtx = nullptr)
 {
     using namespace std;
     vector<string> err;
@@ -54,18 +57,22 @@ static bool process_output(const std::string& s, std::vector<std::string>& out)
     {
         if(!err.empty())
         {
+            if(mtx != nullptr) mtx->lock();
             cerr << "error detected when running " << s << endl;
             for(int i = 0; i < err.size(); i++)
             {
                 cerr << "l(" << i << ") " << err[i] << endl;
             }
             cerr << "usually this does not show a problem, just as a reference" << endl;
+            if(mtx != nullptr) mtx->unlock();
         }
         return true;
     }
     else
     {
+        if(mtx != nullptr) mtx->lock();
         cerr << "failed to run command " << s << endl;
+        if(mtx != nullptr) mtx->unlock();
         return false;
     }
 }
