@@ -20,8 +20,6 @@ const string config_t::default_cd = "cd %1%";
 const string config_t::default_command_separator = "%1% ; %2%";
 const string config_t::default_make = "make";
 const string config_t::default_maketree = "maketree";
-const string config_t::default_make_clean = "make clean";
-const string config_t::default_maketree_clean = "maketree -c";
 const string config_t::default_command_surround = "(%1%)";
 const config_t config_t::instance;
 

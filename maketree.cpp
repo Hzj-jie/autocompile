@@ -16,7 +16,7 @@ static const int RUN_COMMAND_FAILURE = -1;
 static const int CYCLIC_DEPENDENCIES = -2;
 
 static bool verify = false;
-static bool clean = false;
+static vector<string> parameters;
 static vector<string> targets;
 static vector<vector<bool> > deps;
 static mutex mtx;
@@ -86,9 +86,17 @@ static bool has_makefile(const string& p)
            !o.empty();
 }
 
-static void run_cmd(int id, const string& p, const string& cmd, const string& cmd_clean)
+static void run_cmd(int id, const string& p, string cmd)
 {
-    string c = merge_command(p, clean ? cmd_clean : cmd);
+    if(!parameters.empty())
+    {
+        for(size_t i = 0; i < parameters.size(); i++)
+        {
+            cmd.push_back(' ');
+            cmd.append(parameters[i]);
+        }
+    }
+    string c = merge_command(p, cmd);
     if(system_available && !verify)
     {
         int r = system(c.c_str());
@@ -104,12 +112,12 @@ static void run_cmd(int id, const string& p, const string& cmd, const string& cm
 
 static void run_make(int id, const string& p)
 {
-    run_cmd(id, p, config.make(), config.make_clean());
+    run_cmd(id, p, config.make());
 }
 
 static void run_maketree(int id, const string& p)
 {
-    run_cmd(id, p, config.maketree(), config.maketree_clean());
+    run_cmd(id, p, config.maketree());
 }
 
 void select_target(int& selected, int& unfinished)
@@ -237,13 +245,7 @@ int main(int argc, const char* const* const argv)
             {
                 if(string("-v") == argv[i])
                     verify = true;
-                else if(string("-c") == argv[i])
-                    clean = true;
-                else
-                {
-                    size_t v;
-                    if(from_str(argv[1], v)) con = v;
-                }
+                else parameters.push_back(argv[i]);
             }
             vector<thread> threads;
             for(size_t i = 0; i < con - 1; i++)

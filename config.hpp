@@ -83,12 +83,6 @@ private:
                         _make = v;
                     else if(k == "maketree")
                         _maketree = v;
-                    else if(k == "make_clean" ||
-                            k == "make-clean")
-                        _make_clean = v;
-                    else if(k == "maketree_clean" ||
-                            k == "maketree-clean")
-                        _maketree_clean = v;
                     else if(k == "command_surround" ||
                             k == "command-surround")
                         _command_surround = v;
@@ -117,8 +111,6 @@ private:
     std::string _command_separator;
     std::string _make;
     std::string _maketree;
-    std::string _make_clean;
-    std::string _maketree_clean;
     std::string _command_surround;
 
     const static std::string default_cc_m;
@@ -138,8 +130,6 @@ private:
     const static std::string default_command_separator;
     const static std::string default_make;
     const static std::string default_maketree;
-    const static std::string default_make_clean;
-    const static std::string default_maketree_clean;
     const static std::string default_command_surround;
 
 public:
@@ -163,8 +153,6 @@ public:
     return_value(command_separator);
     return_value(make);
     return_value(maketree);
-    return_value(make_clean);
-    return_value(maketree_clean);
     return_value(command_surround);
 #undef return_value
 
