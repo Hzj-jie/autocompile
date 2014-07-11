@@ -1,6 +1,4 @@
 
-#!/bin/sh
-
 g++ -Wno-unused-function -O3 -c config.cpp -o config.o -std=c++0x -Wall -pthread
 g++ -Wno-unused-function -O3 -c process_output.cpp -o process_output.o -std=c++0x -Wall -pthread
 g++ -Wno-unused-function -O3 config_test.cpp -o config_test -std=c++0x config.o -Wall -pthread

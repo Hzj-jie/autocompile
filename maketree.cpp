@@ -241,6 +241,7 @@ int main(int argc, const char* const* const argv)
         else
         {
             size_t con = min<size_t>(thread::hardware_concurrency(), targets.size());
+            con = (con == 0 ? 1 : con);
             for(int i = 1; i < argc; i++)
             {
                 if(string("-v") == argv[i])
