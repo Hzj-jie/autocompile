@@ -157,6 +157,10 @@ int main()
                 cout << to_obj(files[i]);
         }
         cout << endl << endl;
+
+        cout << "autocompile:" << endl;
+        cout << '\t' << config.autocompile();
+        cout << endl << endl;
     }
     else return RUN_COMMAND_FAILURE;
 }

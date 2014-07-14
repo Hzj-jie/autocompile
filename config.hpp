@@ -86,6 +86,8 @@ private:
                     else if(k == "command_surround" ||
                             k == "command-surround")
                         _command_surround = v;
+                    else if(k == "autocompile")
+                        _autocompile = v;
                 }
             }
         }
@@ -112,6 +114,7 @@ private:
     std::string _make;
     std::string _maketree;
     std::string _command_surround;
+    std::string _autocompile;
 
     const static std::string default_cc_m;
     const static std::string default_cc_c;
@@ -131,6 +134,7 @@ private:
     const static std::string default_make;
     const static std::string default_maketree;
     const static std::string default_command_surround;
+    const static std::string default_autocompile;
 
 public:
 #define return_value(x) \
@@ -154,6 +158,7 @@ public:
     return_value(make);
     return_value(maketree);
     return_value(command_surround);
+    return_value(autocompile);
 #undef return_value
 
     static const config_t instance;
