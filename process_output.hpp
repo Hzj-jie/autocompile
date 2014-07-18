@@ -8,6 +8,8 @@
 #include <iostream>
 #include <mutex>
 #include "file.hpp"
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 const static struct system_available_t
 {
@@ -28,20 +30,28 @@ private:
     }
 } &system_available = system_available_t::instance;
 
+static std::string uuid_long_str()
+{
+    using namespace std;
+    using namespace boost::uuids;
+    return to_string(random_generator()());
+}
+
 static bool process_output(const std::string& cmd, std::vector<std::string>& output, std::vector<std::string>& error)
 {
     using namespace std;
-    const char* out = "temp.out";
-    const char* err = "temp.err";
+    const char* const out = ".out";
+    const char* const err = ".err";
+    string uuid = uuid_long_str();
     if(system_available)
     {
-        int i = system((cmd + " 1>> " + out + " 2>> " + err).c_str());
+        int i = system((cmd + " 1>> " + uuid + out + " 2>> " + uuid + err).c_str());
         bool r = (i != 127) &&
                  (i != 9009);
-        r = read_all_lines(string(out), output) && r;
-        r = read_all_lines(string(err), error) && r;
-        r = (remove(out) == 0) && r;
-        r = (remove(err) == 0) && r;
+        r = read_all_lines(uuid + out, output) && r;
+        r = read_all_lines(uuid + err, error) && r;
+        r = (remove((uuid + out).c_str()) == 0) && r;
+        r = (remove((uuid + err).c_str()) == 0) && r;
         return r;
     }
     else return false;

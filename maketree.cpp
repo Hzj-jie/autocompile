@@ -26,7 +26,7 @@ static bool init_targets()
 {
     targets.clear();
     vector<string> d;
-    if(process_output(config.list_dir(), d))
+    if(process_output(config.list_dir(), d, &omtx))
     {
         for(size_t i = 0; i < d.size(); i++)
         {
