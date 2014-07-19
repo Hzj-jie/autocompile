@@ -68,10 +68,10 @@ static bool process_output(const std::string& s,
         if(!err.empty())
         {
             if(mtx != nullptr) mtx->lock();
-            cout << "error detected when running " << s << endl;
+            cerr << "error detected when running " << s << endl;
             for(size_t i = 0; i < err.size(); i++)
-                cout << "l(" << i << ") " << err[i] << endl;
-            cout << "usually this does not show a problem, just as a reference" << endl;
+                cerr << "l(" << i << ") " << err[i] << endl;
+            cerr << "usually this does not show a problem, just as a reference" << endl;
             if(mtx != nullptr) mtx->unlock();
         }
         return true;
