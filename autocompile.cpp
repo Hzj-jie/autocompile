@@ -11,6 +11,27 @@ using namespace boost;
 
 static const int RUN_COMMAND_FAILURE = -1;
 
+static void append_if_not_empty(string& s, const string& c)
+{
+    if(!c.empty())
+    {
+        s.push_back(' ');
+        s.append(c);
+    }
+}
+
+static void append_if_not_empty(ostream& os, const string& c)
+{
+    if(!c.empty()) os << ' ' << c;
+}
+
+template <typename T>
+static void append_cc_flag(T& s)
+{
+    append_if_not_empty(s, config.cc_flag());
+    append_if_not_empty(s, config.cc_flag2());
+}
+
 static bool print_dependence(const string& file,
                              const string& replace_target_from,
                              const string& replace_target_to,
@@ -18,11 +39,7 @@ static bool print_dependence(const string& file,
 {
     vector<string> out;
     string cmd = (format(config.cc_m()) % file).str();
-    if(!config.cc_flag().empty())
-    {
-        cmd += " ";
-        cmd += config.cc_flag();
-    }
+    append_cc_flag(cmd);
     if(process_output(cmd, out) &&
        !out.empty())
     {
@@ -101,8 +118,7 @@ int main()
                 {
                     cout << '\t'
                          << format(config.cc_c()) % files[i] % to_obj(files[i]);
-                    if(!config.cc_flag().empty())
-                        cout << ' ' << config.cc_flag();
+                    append_cc_flag(cout);
                     cout << endl << endl;
                 }
                 else return RUN_COMMAND_FAILURE;
@@ -127,11 +143,7 @@ int main()
                     cout << " \\" << endl << ' ' << objs[i];
 
                 string o = str(format(config.cc()) % config.main() % config.out());
-                if(!config.cc_flag().empty())
-                {
-                    o.push_back(' ');
-                    o.append(config.cc_flag());
-                }
+                append_cc_flag(o);
 
                 vector<string> dlibs;
                 split(config.dlibs(), dlibs);

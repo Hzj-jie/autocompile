@@ -22,5 +22,6 @@ const string config_t::default_make = "make";
 const string config_t::default_maketree = "maketree";
 const string config_t::default_command_surround = "(%1%)";
 const string config_t::default_autocompile = "autocompile > Makefile";
+const string config_t::default_cc_flag2 = "";
 const config_t config_t::instance;
 

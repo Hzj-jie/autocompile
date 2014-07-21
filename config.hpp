@@ -88,6 +88,13 @@ private:
                         _command_surround = v;
                     else if(k == "autocompile")
                         _autocompile = v;
+                    else if(k == "cc_flag2" ||
+                            k == "cc-flag2" ||
+                            k == "compiler-flag2" ||
+                            k == "compiler-option2" ||
+                            k == "extra-compiler-flag" ||
+                            k == "extra-compiler-option")
+                        _cc_flag2 = v;
                 }
             }
         }
@@ -100,6 +107,7 @@ private:
     std::string _cc_c;
     std::string _cc;
     std::string _cc_flag;
+    std::string _cc_flag2;
     std::string _dlink;
     std::string _list;
     std::string _main;
@@ -135,6 +143,7 @@ private:
     const static std::string default_maketree;
     const static std::string default_command_surround;
     const static std::string default_autocompile;
+    const static std::string default_cc_flag2;
 
 public:
 #define return_value(x) \
@@ -159,6 +168,7 @@ public:
     return_value(maketree);
     return_value(command_surround);
     return_value(autocompile);
+    return_value(cc_flag2);
 #undef return_value
 
     static const config_t instance;
