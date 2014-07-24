@@ -31,7 +31,13 @@ static bool init_targets()
         for(size_t i = 0; i < d.size(); i++)
         {
             if(dirs.ignores().find(d[i]) == dirs.ignores().end())
+            {
                 targets.push_back(d[i]);
+#ifdef DEBUG
+                unique_lock<mutex> lck(omtx);
+                cout << "find target " << d[i] << endl;
+#endif
+            }
         }
 
         deps.resize(targets.size());
@@ -100,8 +106,12 @@ static void run_cmd(int id, const string& p, string cmd)
     if(system_available && !verify)
     {
         int r = system(c.c_str());
+#ifdef DEBUG
         unique_lock<mutex> lck(omtx);
         cout << id << ": command " << c << " returns " << r << endl;
+#else
+        r++; // no warning
+#endif
     }
     else
     {
@@ -120,7 +130,7 @@ static void run_maketree(int id, const string& p)
     run_cmd(id, p, config.maketree());
 }
 
-void select_target(int& selected, int& unfinished)
+void select_target(int& selected, int& unfinished, int id)
 {
     selected = -1;
     unfinished = 0;
@@ -129,6 +139,13 @@ void select_target(int& selected, int& unfinished)
     {
         if(deps[i][i])
         {
+#ifdef DEBUG
+            if(id >= 0)
+            {
+                unique_lock<mutex> lck(omtx);
+                cout << id << ": target " << targets[i] << " has not been made" << endl;
+            }
+#endif
             unfinished++;
             size_t j;
             for(j = 0; j < deps[i].size(); j++)
@@ -138,10 +155,24 @@ void select_target(int& selected, int& unfinished)
             }
             if(j == deps[i].size())
             {
+#ifdef DEBUG
+                if(id >= 0)
+                {
+                    unique_lock<mutex> lck(omtx);
+                    cout << id << ": target " << targets[i] << " has been selected" << endl;
+                }
+#endif
                 selected = i;
-                deps[i][i] = false;
+                if(id >= 0) deps[i][i] = false;
                 break;
             }
+#ifdef DEBUG
+            else if(id >= 0)
+            {
+                unique_lock<mutex> lck(omtx);
+                cout << id << ": target " << targets[i] << " dependency has not been fulfilled" << endl;
+            }
+#endif
         }
     }
 }
@@ -152,13 +183,15 @@ static void run(int id)
     {
         int selected = -1;
         int unfinished = 0;
-        select_target(selected, unfinished);
+        select_target(selected, unfinished, id);
         if(selected >= 0)
         {
+#ifdef DEBUG
             {
                 unique_lock<mutex> lck(omtx);
                 cout << id << ": starts target " << targets[selected] << endl;
             }
+#endif
             if(has_makefile(targets[selected]))
                 run_make(id, targets[selected]);
             else run_maketree(id, targets[selected]);
@@ -166,22 +199,26 @@ static void run(int id)
         }
         else if(unfinished <= id)
         {
+#ifdef DEBUG
             {
                 unique_lock<mutex> lck(omtx);
                 cout << id << ": no more targets to run, finished" << endl;
             }
+#endif
             break;
         }
         else
         {
+#ifdef DEBUG
             {
                 unique_lock<mutex> lck(omtx);
                 cout << id << ": pending dependencies to finish" << endl;
             }
-            using namespace std::chrono;
+#endif
             while(1)
             {
-                select_target(selected, unfinished);
+                select_target(selected, unfinished, -1);
+                using namespace std::chrono;
                 if(selected >= 0 || unfinished <= id) break;
                 else this_thread::sleep_for(seconds(1));
             }
@@ -254,6 +291,19 @@ int main(int argc, const char* const* const argv)
             run(con - 1);
             for(size_t i = 0; i < con - 1; i++)
                 threads[i].join();
+
+            for(size_t i = 0; i < deps.size(); i++)
+            {
+                if(deps[i][i])
+                {
+                    {
+                        unique_lock<mutex> lck(omtx);
+                        cerr << "target " << targets[i] << " has not been made" << endl;
+                    }
+                    i = 0;
+                    i /= i;
+                }
+            }
         }
     }
     else return RUN_COMMAND_FAILURE;

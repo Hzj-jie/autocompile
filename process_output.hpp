@@ -65,6 +65,7 @@ static bool process_output(const std::string& s,
     vector<string> err;
     if(process_output(s, out, err))
     {
+#ifdef DEBUG
         if(!err.empty())
         {
             if(mtx != nullptr) mtx->lock();
@@ -74,6 +75,7 @@ static bool process_output(const std::string& s,
             cerr << "usually this does not show a problem, just as a reference" << endl;
             if(mtx != nullptr) mtx->unlock();
         }
+#endif
         return true;
     }
     else
