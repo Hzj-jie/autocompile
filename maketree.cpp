@@ -283,6 +283,8 @@ int main(int argc, const char* const* const argv)
             {
                 if(string("-v") == argv[i])
                     verify = true;
+                else if(string("-1") == argv[i])
+                    con = 1;
                 else parameters.push_back(argv[i]);
             }
             vector<thread> threads;
