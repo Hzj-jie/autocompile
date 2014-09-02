@@ -31,7 +31,7 @@ static void split(const std::string& s, std::vector<std::string>& o, const char*
 {
     using namespace boost;
     o.clear();
-    tokenizer<char_separator<char> > tokens(s, char_separator<char>(delims));
+    tokenizer<char_separator<char>> tokens(s, char_separator<char>(delims));
     for(auto it = tokens.begin(); it != tokens.end(); it++)
         o.push_back(*it);
 }

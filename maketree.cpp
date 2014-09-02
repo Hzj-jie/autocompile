@@ -18,7 +18,7 @@ static const int CYCLIC_DEPENDENCIES = -2;
 static bool verify = false;
 static vector<string> parameters;
 static vector<string> targets;
-static vector<vector<bool> > deps;
+static vector<vector<bool>> deps;
 static mutex mtx;
 static mutex omtx;
 

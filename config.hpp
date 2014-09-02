@@ -40,6 +40,11 @@ private:
                             k == "cc-c" ||
                             k == "compile")
                         _cc_c = v;
+                    else if(k == "cc_h" ||
+                            k == "cc-h" ||
+                            k == "compile_header" ||
+                            k == "compile-header")
+                        _cc_h = v;
                     else if(k == "cc" ||
                             k == "compile-link")
                         _cc = v;
@@ -53,6 +58,9 @@ private:
                         _dlink = v;
                     else if(k == "list")
                         _list = v;
+                    else if(k == "list_h" ||
+                            k == "list-h")
+                        _list_h = v;
                     else if(k == "main")
                         _main = v;
                     else if(k == "objs" ||
@@ -105,11 +113,13 @@ private:
 
     std::string _cc_m;
     std::string _cc_c;
+    std::string _cc_h;
     std::string _cc;
     std::string _cc_flag;
     std::string _cc_flag2;
     std::string _dlink;
     std::string _list;
+    std::string _list_h;
     std::string _main;
     std::string _objs;
     std::string _out;
@@ -126,10 +136,12 @@ private:
 
     const static std::string default_cc_m;
     const static std::string default_cc_c;
+    const static std::string default_cc_h;
     const static std::string default_cc;
     const static std::string default_cc_flag;
     const static std::string default_dlink;
     const static std::string default_list;
+    const static std::string default_list_h;
     const static std::string default_main;
     const static std::string default_objs;
     const static std::string default_out;
@@ -151,10 +163,12 @@ public:
         return (_##x.empty() ? default_##x : _##x); }
     return_value(cc_m);
     return_value(cc_c);
+    return_value(cc_h);
     return_value(cc);
     return_value(cc_flag);
     return_value(dlink);
     return_value(list);
+    return_value(list_h);
     return_value(main);
     return_value(objs);
     return_value(out);

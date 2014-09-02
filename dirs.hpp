@@ -11,7 +11,7 @@ static const class dirs_t
 {
 private:
     std::set<std::string> _ignores;
-    std::map<std::string, std::set<std::string> > _deps;
+    std::map<std::string, std::set<std::string>> _deps;
 
     void read_file(const std::string& file)
     {
@@ -60,7 +60,7 @@ public:
         return _ignores;
     }
 
-    const std::map<std::string, std::set<std::string> >& deps() const
+    const std::map<std::string, std::set<std::string>>& deps() const
     {
         return _deps;
     }

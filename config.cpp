@@ -5,10 +5,12 @@ using namespace std;
 
 const string config_t::default_cc_m = "g++ -MM %1%";
 const string config_t::default_cc_c = "g++ -c %1% -o %2%";
+const string config_t::default_cc_h = "g++ -x c++-header %1% -o %2%";
 const string config_t::default_cc = "g++ %1% -o %2%";
 const string config_t::default_cc_flag = "-std=c++11 -Wall -Wno-unused-function -Wno-unused-variable -O3";
 const string config_t::default_dlink = "-l%1%";
 const string config_t::default_list = "ls -1 *.cpp *.c";
+const string config_t::default_list_h = "ls -1 *.hpp *.h";
 const string config_t::default_main = "main.cpp";
 const string config_t::default_objs = "";
 const string config_t::default_out = "main";
