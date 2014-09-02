@@ -3,11 +3,14 @@ autocompile
 
 a tool set to help generate makefile and build a tree structure
 
+autocompile tool set is targeting to manage a small or middle size project, free developpers from writting and updating makefiles, and build project tree from top level.
+autocompile tool set does not replace make or compiler, instead it generate makefile for make, and use compiler to detect source file dependencies.
+
 this tool set contains two tools,
 
 1. autocompile
 
-it goes through current directory to looking for .c and .cpp files, generate dependencies according to g++ -M output, and output makefile to stdout.
+it goes through current directory to looking for .c and .cpp files, generate dependencies according to g++ -MM output, and output makefile to stdout.
 
 autocompile looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration
 
@@ -16,9 +19,9 @@ autocompile looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompil
 it goes through current directory to looking for sub folders to compile, if a subfolder contains Makefile / makefile / GNUmakefile, it will call make, otherwise call maketree
 
 support command line parameters
-  - -c make clean instead of make
+  - -1 use only one thread
   - -v output the commands to run, instead of run them
-  - an integer, the concurrency, maketree will use at most these threads
+  - other command line parameters will be sent to make or child maketree process. say 'maketree autocompile' will run 'make autocompile' if Makefile exists, and 'maketree autocompile'.
 
 maketree also looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration
 
@@ -50,17 +53,35 @@ if folder1 depends on folder2 and folder3, i.e. folder1 can only be built after 
 
     alias cc_c, compile
 
+  - cc-h
+
+    the g++ -x c++-header as boost::format string, default value is g++ -x c++-header %1% -o %2%
+
+    alias cc_h, compile-header, compile_header
+
   - cc
 
     the g++ command as boost::format string, default value is g++ %1% -o %2%
 
     alias compile-link
 
+  - all-cmd
+
+    the make command to run in 'all' target, the 'all' target is a phony target by default, but you can provide a command for it. default value is empty.
+
+    alias all_cmd
+
   - cc-flag
 
-    extra g++ options, default value is -std=c++11
+    extra g++ options, default value is -std=c++11 -Wall -Wno-unused-function -Wno-unused-variable -O3
 
     alias cc_flag, compiler-flag, compiler-option
+
+  - cc-flag2
+
+    extra g++ options, default value is empty, so you can change the compiling command but inherits the default options cc-flag provided.
+
+    alias cc_flag2, compiler-flag2, compiler-option2, extra-compiler-flag, extra-compiler-option
 
   - dlink
 
@@ -71,6 +92,10 @@ if folder1 depends on folder2 and folder3, i.e. folder1 can only be built after 
   - list
 
     the system command to list .c and .cpp file, default value is ls -1 *.cpp *.c
+
+  - list-h
+
+    the system command to list .h and .hpp file, default value is ls -1 *.hpp *.h
 
   - main
 
@@ -161,4 +186,28 @@ dirs can include
     you can also write this line as
 
     folder1 folder2 folder3
+
+
+examples,
+
+there are two example projects in the folder
+
+  - test-project
+
+    it shows how to use autocompile to generate Makefile, it has one .h file, one .hpp file, two .cpp files, while it also needs to include boost_system to compile. so the .autocompile file only needs to provide the dlibs as boost_system.
+
+    run ./autocompile.sh or ../autocompile > Makefile will generate Makefile against .autocompile.
+
+  - test-project2
+
+    it shows the combination of maketree and autocompile, while maketree can help to update Makefile by running 'maketree autocompile'. it will run 'make autocompile' in each folder with Makefile.
+
+    while there are several dirs files to show the dependencies between each folder.
+
+
+howto,
+
+  - change compiler
+
+    if you would like to change compiler for a project, but do not want to change .autocompile files from all the folders, you can choose to create a .autocompile file in home folder, i.e. /home/<user-name>/.autocompile, and set cc parameter. i.e. 'cc clang++' in your .autocompile file. and run 'maketree autocompile' to update all the Makefiles in the project.
 
