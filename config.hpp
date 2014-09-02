@@ -106,6 +106,11 @@ private:
                             k == "extra-compiler-flag" ||
                             k == "extra-compiler-option")
                         _cc_flag2 = v;
+                    else if(k == "use_pch" ||
+                            k == "use-pch" ||
+                            k == "use-precompiled-header" ||
+                            k == "enable-precompiled-header")
+                        _use_pch = (v == "yes" || v == "1" || v == "Yes");
                 }
             }
         }
@@ -118,6 +123,7 @@ private:
             _cc_h = _cc + " -x c++-header";
     }
 
+    bool _use_pch;
     std::string _cc_m;
     std::string _cc_c;
     std::string _cc_h;
@@ -195,9 +201,14 @@ public:
     return_value(autocompile);
 #undef return_value
 
+    bool use_pch() const
+    {
+        return _use_pch;
+    }
+
     static const config_t instance;
 private:
-    config_t()
+    config_t() : _use_pch(true)
     {
         using namespace std;
         const char* autocompile = ".autocompile";

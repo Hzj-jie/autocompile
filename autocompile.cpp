@@ -125,10 +125,13 @@ int main()
         for(size_t i = 0; i < cfiles.size(); i++) cout << "# " << cfiles[i] << endl;
 #endif
         cout << "all:";
-        for(size_t i = 0; i < hfiles.size(); i++)
+        if(config.use_pch())
         {
-            cout << " \\" << endl << " ";
-            cout << to_pch(hfiles[i]);
+            for(size_t i = 0; i < hfiles.size(); i++)
+            {
+                cout << " \\" << endl << " ";
+                cout << to_pch(hfiles[i]);
+            }
         }
         for(size_t i = 0; i < cfiles.size(); i++)
         {
@@ -142,20 +145,23 @@ int main()
             cout << endl << '\t' << config.all_cmd();
         cout << endl << endl;
 
-        for(size_t i = 0; i < hfiles.size(); i++)
+        if(config.use_pch())
         {
-#ifdef DEBUG
-            cout << "# processing hfile " << hfiles[i] << endl;
-            cout << "# to_obj == " << to_obj(hfiles[i]) << ", to_pch == " << to_pch(hfiles[i]) << endl;
-#endif
-            if(print_dependence(hfiles[i], to_obj(hfiles[i]), to_pch(hfiles[i]), true))
+            for(size_t i = 0; i < hfiles.size(); i++)
             {
-                cout << '\t'
-                     << format(config.cc_h()) % hfiles[i] % to_pch(hfiles[i]);
-                append_cc_flag(cout);
-                cout << endl << endl;
+#ifdef DEBUG
+                cout << "# processing hfile " << hfiles[i] << endl;
+                cout << "# to_obj == " << to_obj(hfiles[i]) << ", to_pch == " << to_pch(hfiles[i]) << endl;
+#endif
+                if(print_dependence(hfiles[i], to_obj(hfiles[i]), to_pch(hfiles[i]), true))
+                {
+                    cout << '\t'
+                         << format(config.cc_h()) % hfiles[i] % to_pch(hfiles[i]);
+                    append_cc_flag(cout);
+                    cout << endl << endl;
+                }
+                else return RUN_COMMAND_FAILURE;
             }
-            else return RUN_COMMAND_FAILURE;
         }
 
         bool has_main = false;
@@ -179,8 +185,11 @@ int main()
             if(print_dependence(config.main(), to_obj(config.main()), config.out(), false))
             {
                 vector<string> deps;
-                for(size_t i = 0; i < hfiles.size(); i++)
-                    cout << " \\" << endl << ' ' << to_pch(hfiles[i]);
+                if(config.use_pch())
+                {
+                    for(size_t i = 0; i < hfiles.size(); i++)
+                        cout << " \\" << endl << ' ' << to_pch(hfiles[i]);
+                }
                 for(size_t i = 0; i < cfiles.size(); i++)
                 {
                     if(cfiles[i] != config.main())
@@ -209,13 +218,16 @@ int main()
             else return RUN_COMMAND_FAILURE;
         }
 
-        if(!hfiles.empty() || !cfiles.empty())
+        if((config.use_pch() && !hfiles.empty()) || !cfiles.empty())
         {
             cout << "clean:" << endl;
             cout << "\t-" << config.rm();
-            for(size_t i = 0; i < hfiles.size(); i++)
+            if(config.use_pch())
             {
-                cout << ' ' << to_pch(hfiles[i]);
+                for(size_t i = 0; i < hfiles.size(); i++)
+                {
+                    cout << ' ' << to_pch(hfiles[i]);
+                }
             }
             for(size_t i = 0; i < cfiles.size(); i++)
             {
