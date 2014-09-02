@@ -124,7 +124,20 @@ int main()
         cout << "# cfiles ==" << endl;
         for(size_t i = 0; i < cfiles.size(); i++) cout << "# " << cfiles[i] << endl;
 #endif
+        if(!config.default_target().empty())
+        {
+            cout << "default:"
+                 << endl
+                 << '\t'
+                 << config.default_target()
+                 << endl
+                 << endl;
+        }
+
+        const char* first_target_name = "first";
         cout << "all:";
+        if(!config.first_target().empty())
+            cout << " \\" << endl << " " << first_target_name;
         if(config.use_pch())
         {
             for(size_t i = 0; i < hfiles.size(); i++)
@@ -144,6 +157,17 @@ int main()
         if(!config.all_cmd().empty())
             cout << endl << '\t' << config.all_cmd();
         cout << endl << endl;
+
+        if(!config.first_target().empty())
+        {
+            cout << first_target_name
+                 << ":"
+                 << endl
+                 << '\t'
+                 << config.first_target()
+                 << endl
+                 << endl;
+        }
 
         if(config.use_pch())
         {

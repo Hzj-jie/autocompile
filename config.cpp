@@ -3,6 +3,8 @@
 #include <string>
 using namespace std;
 
+const string config_t::default_default_target = "";
+const string config_t::default_first_target = "";
 const string config_t::default_cc_m = "g++ -MM %1%";
 const string config_t::default_cc_c = "g++ -c %1% -o %2%";
 const string config_t::default_cc_h = "g++ -x c++-header %1% -o %2%";

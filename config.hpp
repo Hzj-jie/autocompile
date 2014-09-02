@@ -29,12 +29,18 @@ private:
                 {
                     string k, v;
                     split(s, k, v);
-                    if(k == "cc_m" ||
-                       k == "cc-m" ||
-                       k == "compiler-dependency" ||
-                       k == "compiler-dependencies" ||
-                       k == "cc_M" ||
-                       k == "cc-M")
+                    if(k == "default_target" ||
+                       k == "default-target")
+                        _default_target = v;
+                    else if(k == "first_target" ||
+                            k == "first-target")
+                        _first_target = v;
+                    else if(k == "cc_m" ||
+                            k == "cc-m" ||
+                            k == "compiler-dependency" ||
+                            k == "compiler-dependencies" ||
+                            k == "cc_M" ||
+                            k == "cc-M")
                         _cc_m = v;
                     else if(k == "cc_c" ||
                             k == "cc-c" ||
@@ -124,6 +130,8 @@ private:
     }
 
     bool _use_pch;
+    std::string _default_target;
+    std::string _first_target;
     std::string _cc_m;
     std::string _cc_c;
     std::string _cc_h;
@@ -148,6 +156,8 @@ private:
     std::string _command_surround;
     std::string _autocompile;
 
+    const static std::string default_default_target;
+    const static std::string default_first_target;
     const static std::string default_cc_m;
     const static std::string default_cc_c;
     const static std::string default_cc_h;
@@ -176,6 +186,8 @@ public:
 #define return_value(x) \
     const std::string& x() const { \
         return (_##x.empty() ? default_##x : _##x); }
+    return_value(default_target);
+    return_value(first_target);
     return_value(cc_m);
     return_value(cc_c);
     return_value(cc_h);
