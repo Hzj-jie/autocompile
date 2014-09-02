@@ -194,7 +194,7 @@ static void run(int id)
 #endif
             if(has_makefile(targets[selected]))
                 run_make(id, targets[selected]);
-            else run_maketree(id, targets[selected]);
+            run_maketree(id, targets[selected]);
             mark_deps(selected);
         }
         else if(unfinished <= id)

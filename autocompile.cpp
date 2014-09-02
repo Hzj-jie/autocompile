@@ -124,26 +124,23 @@ int main()
         cout << "# cfiles ==" << endl;
         for(size_t i = 0; i < cfiles.size(); i++) cout << "# " << cfiles[i] << endl;
 #endif
-        if(!hfiles.empty() || !cfiles.empty() || !config.all_cmd().empty())
+        cout << "all:";
+        for(size_t i = 0; i < hfiles.size(); i++)
         {
-            cout << "all:";
-            for(size_t i = 0; i < hfiles.size(); i++)
-            {
-                cout << " \\" << endl << " ";
-                cout << to_pch(hfiles[i]);
-            }
-            for(size_t i = 0; i < cfiles.size(); i++)
-            {
-                cout << " \\" << endl << " ";
-                if(cfiles[i] == config.main())
-                    cout << config.out();
-                else
-                    cout << to_obj(cfiles[i]);
-            }
-            if(!config.all_cmd().empty())
-                cout << endl << '\t' << config.all_cmd();
-            cout << endl << endl;
+            cout << " \\" << endl << " ";
+            cout << to_pch(hfiles[i]);
         }
+        for(size_t i = 0; i < cfiles.size(); i++)
+        {
+            cout << " \\" << endl << " ";
+            if(cfiles[i] == config.main())
+                cout << config.out();
+            else
+                cout << to_obj(cfiles[i]);
+        }
+        if(!config.all_cmd().empty())
+            cout << endl << '\t' << config.all_cmd();
+        cout << endl << endl;
 
         for(size_t i = 0; i < hfiles.size(); i++)
         {
