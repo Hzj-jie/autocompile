@@ -48,6 +48,9 @@ private:
                     else if(k == "cc" ||
                             k == "compile-link")
                         _cc = v;
+                    else if(k == "all-cmd" ||
+                            k == "all_cmd")
+                        _all_cmd = v;
                     else if(k == "cc_flag" ||
                             k == "cc-flag" ||
                             k == "compiler-flag" ||
@@ -109,12 +112,17 @@ private:
 
         if(_cc_c.empty() && !_cc.empty())
             _cc_c = _cc + " -c";
+        if(_cc_m.empty() && !_cc.empty())
+            _cc_m = _cc + " -MM";
+        if(_cc_h.empty() && !_cc.empty())
+            _cc_h = _cc + " -x c++-header";
     }
 
     std::string _cc_m;
     std::string _cc_c;
     std::string _cc_h;
     std::string _cc;
+    std::string _all_cmd;
     std::string _cc_flag;
     std::string _cc_flag2;
     std::string _dlink;
@@ -138,7 +146,9 @@ private:
     const static std::string default_cc_c;
     const static std::string default_cc_h;
     const static std::string default_cc;
+    const static std::string default_all_cmd;
     const static std::string default_cc_flag;
+    const static std::string default_cc_flag2;
     const static std::string default_dlink;
     const static std::string default_list;
     const static std::string default_list_h;
@@ -155,7 +165,6 @@ private:
     const static std::string default_maketree;
     const static std::string default_command_surround;
     const static std::string default_autocompile;
-    const static std::string default_cc_flag2;
 
 public:
 #define return_value(x) \
@@ -165,7 +174,9 @@ public:
     return_value(cc_c);
     return_value(cc_h);
     return_value(cc);
+    return_value(all_cmd);
     return_value(cc_flag);
+    return_value(cc_flag2);
     return_value(dlink);
     return_value(list);
     return_value(list_h);
@@ -182,7 +193,6 @@ public:
     return_value(maketree);
     return_value(command_surround);
     return_value(autocompile);
-    return_value(cc_flag2);
 #undef return_value
 
     static const config_t instance;

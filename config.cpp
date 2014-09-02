@@ -7,7 +7,9 @@ const string config_t::default_cc_m = "g++ -MM %1%";
 const string config_t::default_cc_c = "g++ -c %1% -o %2%";
 const string config_t::default_cc_h = "g++ -x c++-header %1% -o %2%";
 const string config_t::default_cc = "g++ %1% -o %2%";
+const string config_t::default_all_cmd = "";
 const string config_t::default_cc_flag = "-std=c++11 -Wall -Wno-unused-function -Wno-unused-variable -O3";
+const string config_t::default_cc_flag2 = "";
 const string config_t::default_dlink = "-l%1%";
 const string config_t::default_list = "ls -1 *.cpp *.c";
 const string config_t::default_list_h = "ls -1 *.hpp *.h";
@@ -24,6 +26,5 @@ const string config_t::default_make = "make";
 const string config_t::default_maketree = "maketree -1";
 const string config_t::default_command_surround = "(%1%)";
 const string config_t::default_autocompile = "autocompile > Makefile";
-const string config_t::default_cc_flag2 = "";
 const config_t config_t::instance;
 

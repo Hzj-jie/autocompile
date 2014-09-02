@@ -124,21 +124,26 @@ int main()
         cout << "# cfiles ==" << endl;
         for(size_t i = 0; i < cfiles.size(); i++) cout << "# " << cfiles[i] << endl;
 #endif
-        cout << "all:";
-        for(size_t i = 0; i < hfiles.size(); i++)
+        if(!hfiles.empty() || !cfiles.empty() || !config.all_cmd().empty())
         {
-            cout << " \\" << endl << " ";
-            cout << to_pch(hfiles[i]);
+            cout << "all:";
+            for(size_t i = 0; i < hfiles.size(); i++)
+            {
+                cout << " \\" << endl << " ";
+                cout << to_pch(hfiles[i]);
+            }
+            for(size_t i = 0; i < cfiles.size(); i++)
+            {
+                cout << " \\" << endl << " ";
+                if(cfiles[i] == config.main())
+                    cout << config.out();
+                else
+                    cout << to_obj(cfiles[i]);
+            }
+            if(!config.all_cmd().empty())
+                cout << endl << '\t' << config.all_cmd();
+            cout << endl << endl;
         }
-        for(size_t i = 0; i < cfiles.size(); i++)
-        {
-            cout << " \\" << endl << " ";
-            if(cfiles[i] == config.main())
-                cout << config.out();
-            else
-                cout << to_obj(cfiles[i]);
-        }
-        cout << endl << endl;
 
         for(size_t i = 0; i < hfiles.size(); i++)
         {
@@ -207,21 +212,24 @@ int main()
             else return RUN_COMMAND_FAILURE;
         }
 
-        cout << "clean:" << endl;
-        cout << "\t-" << config.rm();
-        for(size_t i = 0; i < hfiles.size(); i++)
+        if(!hfiles.empty() || !cfiles.empty())
         {
-            cout << ' ' << to_pch(hfiles[i]);
+            cout << "clean:" << endl;
+            cout << "\t-" << config.rm();
+            for(size_t i = 0; i < hfiles.size(); i++)
+            {
+                cout << ' ' << to_pch(hfiles[i]);
+            }
+            for(size_t i = 0; i < cfiles.size(); i++)
+            {
+                cout << ' ';
+                if(cfiles[i] == config.main())
+                    cout << config.out();
+                else
+                    cout << to_obj(cfiles[i]);
+            }
+            cout << endl << endl;
         }
-        for(size_t i = 0; i < cfiles.size(); i++)
-        {
-            cout << ' ';
-            if(cfiles[i] == config.main())
-                cout << config.out();
-            else
-                cout << to_obj(cfiles[i]);
-        }
-        cout << endl << endl;
 
         cout << "autocompile:" << endl;
         cout << '\t' << config.autocompile();
