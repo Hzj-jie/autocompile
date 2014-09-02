@@ -1,53 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Autocompile by Hzj-jie</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="Autocompile : a tool to help generate makefile">
 
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Autocompile</title>
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/Hzj-jie/autocompile">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/Hzj-jie/autocompile/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/Hzj-jie/autocompile/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
 
-    <div class="wrapper">
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Hzj-jie/autocompile">View on GitHub</a>
 
-      <section>
-        <div id="title">
-          <h1>Autocompile</h1>
-          <p>a tool to help generate makefile</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/Hzj-jie">Hzj-jie</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
+          <h1 id="project_title">Autocompile</h1>
+          <h2 id="project_tagline">a tool to help generate makefile</h2>
 
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Hzj-jie/autocompile/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Hzj-jie/autocompile/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h1>
 <a name="autocompile" class="anchor" href="#autocompile"><span class="octicon octicon-link"></span></a>autocompile</h1>
 
 <p>a tool set to help generate makefile and build a tree structure</p>
 
+<p>autocompile tool set is targeting to manage a small or middle size project, free developpers from writting and updating makefiles, and build project tree from top level.
+autocompile tool set does not replace make or compiler, instead it generate makefile for make, and use compiler to detect source file dependencies.</p>
+
 <p>this tool set contains two tools,</p>
 
 <ol>
 <li>autocompile</li>
-</ol><p>it goes through current directory to looking for .c and .cpp files, generate dependencies according to g++ -M output, and output makefile to stdout.</p>
+</ol><p>it goes through current directory to looking for .c and .cpp files, generate dependencies according to g++ -MM output, and output makefile to stdout.</p>
 
 <p>autocompile looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration</p>
 
@@ -58,9 +54,9 @@
 <p>support command line parameters</p>
 
 <ul>
-<li>-c make clean instead of make</li>
+<li>-1 use only one thread</li>
 <li>-v output the commands to run, instead of run them</li>
-<li>an integer, the concurrency, maketree will use at most these threads</li>
+<li>other command line parameters will be sent to make or child maketree process. say 'maketree autocompile' will run 'make autocompile' if Makefile exists, and 'maketree autocompile'.</li>
 </ul><p>maketree also looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration</p>
 
 <p>maketree looks for dirs file in current folder to decide the folders ignored, and the dependencies between the folders</p>
@@ -98,6 +94,13 @@
 <p>alias cc_c, compile</p>
 </li>
 <li>
+<p>cc-h</p>
+
+<p>the g++ -x c++-header as boost::format string, default value is g++ -x c++-header %1% -o %2%</p>
+
+<p>alias cc_h, compile-header, compile_header</p>
+</li>
+<li>
 <p>cc</p>
 
 <p>the g++ command as boost::format string, default value is g++ %1% -o %2%</p>
@@ -105,11 +108,25 @@
 <p>alias compile-link</p>
 </li>
 <li>
+<p>all-cmd</p>
+
+<p>the make command to run in 'all' target, the 'all' target is a phony target by default, but you can provide a command for it. default value is empty.</p>
+
+<p>alias all_cmd</p>
+</li>
+<li>
 <p>cc-flag</p>
 
-<p>extra g++ options, default value is -std=c++11</p>
+<p>extra g++ options, default value is -std=c++11 -Wall -Wno-unused-function -Wno-unused-variable -O3</p>
 
 <p>alias cc_flag, compiler-flag, compiler-option</p>
+</li>
+<li>
+<p>cc-flag2</p>
+
+<p>extra g++ options, default value is empty, so you can change the compiling command but inherits the default options cc-flag provided.</p>
+
+<p>alias cc_flag2, compiler-flag2, compiler-option2, extra-compiler-flag, extra-compiler-option</p>
 </li>
 <li>
 <p>dlink</p>
@@ -122,6 +139,11 @@
 <p>list</p>
 
 <p>the system command to list .c and .cpp file, default value is ls -1 *.cpp *.c</p>
+</li>
+<li>
+<p>list-h</p>
+
+<p>the system command to list .h and .hpp file, default value is ls -1 *.hpp *.h</p>
 </li>
 <li>
 <p>main</p>
@@ -230,11 +252,46 @@
 
 <p>folder1 folder2 folder3</p>
 </li>
+</ul><p>examples,</p>
+
+<p>there are two example projects in the folder</p>
+
+<ul>
+<li>
+<p>test-project</p>
+
+<p>it shows how to use autocompile to generate Makefile, it has one .h file, one .hpp file, two .cpp files, while it also needs to include boost_system to compile. so the .autocompile file only needs to provide the dlibs as boost_system.</p>
+
+<p>run ./autocompile.sh or ../autocompile &gt; Makefile will generate Makefile against .autocompile.</p>
+</li>
+<li>
+<p>test-project2</p>
+
+<p>it shows the combination of maketree and autocompile, while maketree can help to update Makefile by running 'maketree autocompile'. it will run 'make autocompile' in each folder with Makefile.</p>
+
+<p>while there are several dirs files to show the dependencies between each folder.</p>
+</li>
+</ul><p>howto,</p>
+
+<ul>
+<li>
+<p>change compiler</p>
+
+<p>if you would like to change compiler for a project, but do not want to change .autocompile files from all the folders, you can choose to create a .autocompile file in home folder, i.e. /home//.autocompile, and set cc parameter. i.e. 'cc clang++' in your .autocompile file. and run 'maketree autocompile' to update all the Makefiles in the project.</p>
+</li>
 </ul>
       </section>
-
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Autocompile maintained by <a href="https://github.com/Hzj-jie">Hzj-jie</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
     
+
   </body>
 </html>
