@@ -1,4 +1,3 @@
-
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,9 +6,9 @@
 #include <fstream>
 #include <iostream>
 #include <mutex>
+#include <chrono>
+#include <atomic>
 #include "file.hpp"
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
 
 const static struct system_available_t
 {
@@ -33,8 +32,10 @@ private:
 static std::string uuid_long_str()
 {
     using namespace std;
-    using namespace boost::uuids;
-    return to_string(random_generator()());
+    static atomic<uint64_t> counter(0);
+    auto now = chrono::high_resolution_clock::now().time_since_epoch().count();
+    uint64_t count = ++counter;
+    return to_string(now) + "_" + to_string(count);
 }
 
 static bool process_output(const std::string& cmd, std::vector<std::string>& output, std::vector<std::string>& error)
@@ -86,4 +87,3 @@ static bool process_output(const std::string& s,
         return false;
     }
 }
-

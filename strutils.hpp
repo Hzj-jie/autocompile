@@ -1,12 +1,12 @@
-
 #pragma once
 #include <algorithm>
 #include <functional>
 #include <cctype>
 #include <locale>
 #include <vector>
-#include <boost/tokenizer.hpp>
 #include <sstream>
+#include <string>
+#include <iostream>
 
 static std::string& ltrim(std::string& s)
 {
@@ -31,11 +31,24 @@ static std::string& trim(std::string& s)
 
 static void split(const std::string& s, std::vector<std::string>& o, const char* const delims)
 {
-    using namespace boost;
     o.clear();
-    tokenizer<char_separator<char>> tokens(s, char_separator<char>(delims));
-    for(auto it = tokens.begin(); it != tokens.end(); it++)
-        o.push_back(*it);
+    if(s.empty()) return;
+    std::string delim_str(delims ? delims : "");
+    size_t start = s.find_first_not_of(delim_str);
+    while(start != std::string::npos)
+    {
+        size_t end = s.find_first_of(delim_str, start);
+        if(end == std::string::npos)
+        {
+            o.push_back(s.substr(start));
+            break;
+        }
+        else
+        {
+            o.push_back(s.substr(start, end - start));
+            start = s.find_first_not_of(delim_str, end);
+        }
+    }
 }
 
 static void split(const std::string& s, std::vector<std::string>& o, const std::string& delims)
@@ -54,10 +67,10 @@ static bool split(const std::string& s, std::string& first, std::string& second,
     else
     {
         size_t p = s.find_first_of(delims);
-        if(p == string::npos)
+        if(p == std::string::npos)
         {
             first = s;
-            second = string();
+            second = std::string();
             return false;
         }
         else
@@ -82,7 +95,46 @@ static bool split(const std::string& s, std::string& first, std::string& second)
 template <typename T>
 static bool from_str(const std::string& s, T& o)
 {
-    istringstream convert(s);
+    std::istringstream convert(s);
     return (convert >> o);
 }
 
+// Minimal drop-in replacement for boost::format (%1%, %2%, etc.)
+class format
+{
+private:
+    std::string s;
+    int index;
+
+public:
+    explicit format(const std::string& fmt) : s(fmt), index(1) {}
+
+    template <typename T>
+    format& operator%(const T& val)
+    {
+        std::string placeholder = "%" + std::to_string(index++) + "%";
+        size_t pos = s.find(placeholder);
+        if (pos != std::string::npos)
+        {
+            std::ostringstream ss;
+            ss << val;
+            s.replace(pos, placeholder.length(), ss.str());
+        }
+        return *this;
+    }
+
+    std::string str() const
+    {
+        return s;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const format& f)
+    {
+        return os << f.s;
+    }
+};
+
+static inline std::string str(const format& f)
+{
+    return f.str();
+}

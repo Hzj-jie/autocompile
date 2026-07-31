@@ -3,14 +3,12 @@
 #include <vector>
 #include <string>
 #include <thread>
-#include <boost/format.hpp>
 #include <mutex>
 #include <chrono>
 #include "process_output.hpp"
 #include "config.hpp"
 #include "dirs.hpp"
 using namespace std;
-using namespace boost;
 
 static const int RUN_COMMAND_FAILURE = -1;
 static const int CYCLIC_DEPENDENCIES = -2;

@@ -1,17 +1,11 @@
 
 #pragma once
-#if 0
-#include <boost/filesystem/path.hpp>
-#endif
 #include <fstream>
 #include <string>
 #include <vector>
 #include <stdlib.h>
 #include "file.hpp"
 #include "strutils.hpp"
-#if 0
-using namespace boost::filesystem;
-#endif
 
 static const class config_t
 {

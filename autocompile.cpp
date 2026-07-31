@@ -2,12 +2,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <boost/format.hpp>
 #include "config.hpp"
 #include "process_output.hpp"
 #include "strutils.hpp"
 using namespace std;
-using namespace boost;
 
 static const int RUN_COMMAND_FAILURE = -1;
 
