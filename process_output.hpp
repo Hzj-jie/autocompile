@@ -46,8 +46,8 @@ static bool process_output(const std::string& cmd, std::vector<std::string>& out
     if(system_available)
     {
         int i = system((cmd + " 1>> " + uuid + out + " 2>> " + uuid + err).c_str());
-        bool r = (i != 127) &&
-                 (i != 9009);
+        int exit_code = (i == -1) ? -1 : ((i >> 8) & 0xff);
+        bool r = (i != 127) && (i != 9009) && (exit_code != 127) && (exit_code != 9009);
         r = read_all_lines(uuid + out, output) && r;
         r = read_all_lines(uuid + err, error) && r;
         r = (remove((uuid + out).c_str()) == 0) && r;
