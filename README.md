@@ -205,9 +205,13 @@ there are two example projects in the folder
     while there are several dirs files to show the dependencies between each folder.
 
 
-howto,
-
   - change compiler
 
     if you would like to change compiler for a project, but do not want to change .autocompile files from all the folders, you can choose to create a .autocompile file in home folder, i.e. /home/<user-name>/.autocompile, and set cc parameter. i.e. 'cc clang++' in your .autocompile file. and run 'maketree autocompile' to update all the Makefiles in the project.
+
+  - bootstrap a fresh checkout / project
+
+    if you clone a project without Makefiles, you can use the bootstrap file to initialize all Makefiles across the tree:
+
+    run 'maketree -f /path/to/autocompile/bootstrap' to generate Makefiles in all target folders.
 

@@ -85,6 +85,8 @@ static bool process_output(const string& path,
 
 static bool has_makefile(const string& p)
 {
+    if(!parameters.empty() && parameters[0] == "-f")
+        return true;
     vector<string> o;
     return process_output(p, config.list_makefile(), o) &&
            !o.empty();
