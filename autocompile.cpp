@@ -101,6 +101,47 @@ string to_pch(const string& file)
     return file + ".pch";
 }
 
+static string extract_wildcards(const string& cmd)
+{
+    vector<string> tokens;
+    split(cmd, tokens);
+    string res;
+    for(size_t i = 0; i < tokens.size(); i++)
+    {
+        string t = tokens[i];
+        if(t.size() >= 2 && ((t.front() == '"' && t.back() == '"') || (t.front() == '\'' && t.back() == '\'')))
+        {
+            t = t.substr(1, t.size() - 2);
+        }
+        if(t.find('*') != string::npos ||
+           t.find('?') != string::npos)
+        {
+            if(!res.empty()) res.push_back(' ');
+            res.append(t);
+        }
+    }
+    return res;
+}
+
+static string get_autocompile_wildcards()
+{
+    string w1 = extract_wildcards(config.list_h());
+    string w2 = extract_wildcards(config.list());
+    string wildcards;
+    if(!w1.empty()) wildcards.append(w1);
+    if(!w2.empty())
+    {
+        if(!wildcards.empty()) wildcards.push_back(' ');
+        wildcards.append(w2);
+    }
+    if(!wildcards.empty())
+    {
+        wildcards.push_back(' ');
+        wildcards.append(".autocompile");
+    }
+    return wildcards;
+}
+
 int main()
 {
     vector<string> hfiles;
@@ -265,6 +306,14 @@ int main()
         cout << "autocompile:" << endl;
         cout << '\t' << config.autocompile();
         cout << endl << endl;
+
+        string wildcards = get_autocompile_wildcards();
+        if(!wildcards.empty())
+        {
+            cout << "Makefile: $(wildcard " << wildcards << ")" << endl;
+            cout << '\t' << config.autocompile();
+            cout << endl << endl;
+        }
     }
     else return RUN_COMMAND_FAILURE;
 }
