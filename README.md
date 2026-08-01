@@ -86,7 +86,7 @@ folder1: folder2 folder3
 
 ### 1. Installation & Build
 ```bash
-git clone https://github.com/zijiehe/autocompile.git
+git clone https://github.com/hzj-jie/autocompile.git
 cd autocompile
 ./compile.O3.sh
 
