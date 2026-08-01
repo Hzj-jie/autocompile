@@ -10,7 +10,7 @@ const string config_t::default_cc_c = "g++ -c %1% -o %2%";
 const string config_t::default_cc_h = "g++ -x c++-header %1% -o %2%";
 const string config_t::default_cc = "g++ %1% -o %2%";
 const string config_t::default_all_cmd = "";
-const string config_t::default_cc_flag = "-std=c++11 -Wall -Wno-unused-function -Wno-unused-variable -O3";
+const string config_t::default_cc_flag = "-std=c++17 -Wall -Wno-unused-function -Wno-unused-variable -O3";
 const string config_t::default_cc_flag2 = "";
 const string config_t::default_dlink = "-l%1%";
 const string config_t::default_list = "ls -1 *.cpp *.c";
