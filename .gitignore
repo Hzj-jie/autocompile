@@ -1,0 +1,9 @@
+Makefile
+*.o
+*.pch
+autocompile
+maketree
+autocompile_test
+maketree_test
+config_test
+process_output_test
