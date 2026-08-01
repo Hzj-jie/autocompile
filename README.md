@@ -111,4 +111,5 @@ maketree clean
 ---
 
 ## 📄 License
-Released under the MIT License.
+Released under the GNU Lesser General Public License v3 (LGPL-3.0).
+
