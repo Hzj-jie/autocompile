@@ -29,16 +29,16 @@ autocompile > Makefile
 Multi-directory parallel build orchestrator. Recursively navigates project subdirectories in dependency order (defined by `dirs` files) and executes `make` or custom target commands.
 
 ```bash
-# Build the entire project tree recursively
-maketree
-
-# Bootstrap Makefiles in a fresh project tree
+# 1. Bootstrap Makefiles in a fresh project tree
 maketree -f /path/to/autocompile/bootstrap
 
-# Regenerate all Makefiles in subdirectories
+# 2. Regenerate all Makefiles across subdirectories
 maketree autocompile
 
-# Clean all build outputs recursively
+# 3. Build the entire project tree recursively
+maketree
+
+# 4. Clean all build outputs recursively
 maketree clean
 ```
 
