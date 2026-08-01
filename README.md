@@ -1,217 +1,114 @@
-autocompile
-===========
+# autocompile & maketree
 
-a tool set to help generate makefile and build a tree structure
+A lightweight, zero-dependency C++ build toolset for automatic `Makefile` generation and parallel multi-directory project orchestration.
 
-autocompile tool set is targeting to manage a small or middle size project, free developpers from writting and updating makefiles, and build project tree from top level.
-autocompile tool set does not replace make or compiler, instead it generate makefile for make, and use compiler to detect source file dependencies.
+---
 
-this tool set contains two tools,
+## 🌟 Overview
 
-1. autocompile
+`autocompile` eliminates the burden of manually writing and updating Makefiles for C/C++ projects. It automatically parses `#include` header dependencies using the compiler (`g++ -MM`), generates optimal Makefiles (including precompiled header support), and orchestrates multi-directory builds in parallel using directed acyclic graph (DAG) dependency resolution.
 
-it goes through current directory to looking for .c and .cpp files, generate dependencies according to g++ -MM output, and output makefile to stdout.
+* **Zero External Dependencies**: Built 100% with standard C++ (C++17).
+* **Automatic Dependency Tracking**: Scans `.cpp`, `.c`, `.hpp`, and `.h` files and calculates header/PCH dependencies dynamically.
+* **Parallel DAG Traversal**: `maketree` builds independent subdirectories concurrently using worker threads (`std::thread`).
+* **Cycle Detection**: Automatically detects cyclic folder dependencies.
 
-autocompile looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration
+---
 
-2. maketree
+## 🛠️ Tools Included
 
-it goes through current directory to looking for sub folders to compile, if a subfolder contains Makefile / makefile / GNUmakefile, it will call make, otherwise call maketree
+### 1. `autocompile`
+Directory-level Makefile generator. Scans source files in the current folder, computes compiler/header dependencies, and outputs a complete `Makefile` to `stdout`.
 
-support command line parameters
-  - -1 use only one thread
-  - -v output the commands to run, instead of run them
-  - other command line parameters will be sent to make or child maketree process. say 'maketree autocompile' will run 'make autocompile' if Makefile exists, and 'maketree autocompile'.
+```bash
+# Generate a Makefile in the current directory
+autocompile > Makefile
+```
 
-maketree also looks for .autocompile from $HOMEPATH/.autocompile and ./.autocompile as configuration
+### 2. `maketree`
+Multi-directory parallel build orchestrator. Recursively navigates project subdirectories in dependency order (defined by `dirs` files) and executes `make` or custom target commands.
 
-maketree looks for dirs file in current folder to decide the folders ignored, and the dependencies between the folders
+```bash
+# Build the entire project tree recursively
+maketree
 
-usually you do not need to change anything to let autocompile and maketree work in linux or cygwin environments, except for these parameters
+# Bootstrap Makefiles in a fresh project tree
+maketree -f /path/to/autocompile/bootstrap
 
-in .autocompile file
-  - main
-  - out
+# Regenerate all Makefiles in subdirectories
+maketree autocompile
 
-if you need to build a binary instead of object files from a source file, the detail of these parameters are in the follow section
+# Clean all build outputs recursively
+maketree clean
+```
 
-in dirs file
-  - folder1:folder2 folder3
+#### `maketree` Command Line Options:
+* `-1`: Single-threaded execution mode.
+* `-v`: Dry-run verbose mode (prints commands to execute without running them).
+* `<target>`: Target command passed to `make` in each subdirectory (e.g., `clean`, `autocompile`).
 
-if folder1 depends on folder2 and folder3, i.e. folder1 can only be built after folder2 and folder3
+---
 
-.autocompile can include
-  - cc-m
+## ⚙️ Configuration Files
 
-    the g++ -M command as boost::format string, default value is g++ -M %1%
+### `.autocompile` Configuration
+`autocompile` searches for configuration directives in `$HOME/.autocompile`, parent directory `.autocompile` files, and local `.autocompile`.
 
-    alias cc_m, compiler-dependency, compiler-dependencies, cc_M, cc-M
+| Directive | Alias | Description | Default |
+| :--- | :--- | :--- | :--- |
+| `out` | `output` | Output binary filename | `main` |
+| `main` | - | C++ source file containing `main()` | `main.cpp` |
+| `cc-flag` | `cc_flag` | Primary compiler flags | `-std=c++17 -Wall -O3` |
+| `cc-flag2` | `cc_flag2` | Additional linker/post flags | *(empty)* |
+| `dlibs` | `dynamic-libs` | Dynamic libraries to link (`-llibname`) | *(empty)* |
+| `objs` | `libs`, `static-libs` | Static libraries or `.o` object files to link | *(empty)* |
+| `cc` | `compile-link` | Compiler executable format string | `g++ %1% -o %2%` |
+| `cc-m` | `cc_m` | Dependency generation command string | `g++ -MM %1%` |
+| `cc-h` | `cc_h` | Precompiled header compilation format string | `g++ -x c++-header %1% -o %2%` |
 
-  - cc-c
+---
 
-    the g++ -c command as boost::format string, default value is g++ -c %1% -o %2%
+### `dirs` File (Directory Dependency Graph)
+Place a `dirs` file in a directory to configure folder exclusion and inter-directory build dependencies:
 
-    alias cc_c, compile
+```text
+# Ignore build or experimental subdirectories
+-experimental
+-temp_build
 
-  - cc-h
+# Declare build dependencies (folder1 depends on folder2 and folder3)
+folder1: folder2 folder3
+```
 
-    the g++ -x c++-header as boost::format string, default value is g++ -x c++-header %1% -o %2%
+---
 
-    alias cc_h, compile-header, compile_header
+## 🚀 Quick Start Guide
 
-  - cc
+### 1. Installation & Build
+```bash
+git clone https://github.com/zijiehe/autocompile.git
+cd autocompile
+./compile.O3.sh
 
-    the g++ command as boost::format string, default value is g++ %1% -o %2%
+# Add autocompile to your PATH
+export PATH=$(pwd):$PATH
+```
 
-    alias compile-link
+### 2. Bootstrapping & Building a Project
+```bash
+cd /path/to/your/project
 
-  - all-cmd
+# 1. Initialize Makefiles across all subdirectories
+maketree -f /path/to/autocompile/bootstrap
 
-    the make command to run in 'all' target, the 'all' target is a phony target by default, but you can provide a command for it. default value is empty.
+# 2. Build the entire project tree
+maketree
 
-    alias all_cmd
+# 3. Clean build outputs
+maketree clean
+```
 
-  - cc-flag
+---
 
-    extra g++ options, default value is -std=c++11 -Wall -Wno-unused-function -Wno-unused-variable -O3
-
-    alias cc_flag, compiler-flag, compiler-option
-
-  - cc-flag2
-
-    extra g++ options, default value is empty, so you can change the compiling command but inherits the default options cc-flag provided.
-
-    alias cc_flag2, compiler-flag2, compiler-option2, extra-compiler-flag, extra-compiler-option
-
-  - dlink
-
-    the dynamic linking command for the compiler as boost::format string, default value is -l%1%
-
-    alias dynamic-link
-
-  - list
-
-    the system command to list .c and .cpp file, default value is ls -1 *.cpp *.c
-
-  - list-h
-
-    the system command to list .h and .hpp file, default value is ls -1 *.hpp *.h
-
-  - main
-
-    the name of the cpp file contains main, if this file is existing, the makefile will compile and link it, default value is main.cpp
-
-  - objs
-
-    the static libs link to the binary generated, separated by ',' ' ' or ';', default value is empty
-
-    alias libs, static-libs
-
-  - out
-
-    the output file name of the binary generated, default value is main
-
-    alias output
-
-  - dlibs
-
-    the dynamic libs link to the binary generated, separated by ',' ' ' or ';', default value is empty
-
-    alias dynamic-libs
-
-  - rm
-
-    the system command to remove several files, default value is rm
-
-    alias remove
-
-  - list-dir
-
-    the system command to list all directories in a folder, default value is find . -maxdepth 1 -mindepth 1 -type d -printf %P\\n
-
-    alias list_dir
-
-  - list-makefile
-
-    the system command to list makefile in a folder, default value is ls -1 Makefile makefile GNUmakefile
-
-    alias list_makefile
-
-  - cd
-
-    the system command to change current directory as boost::format string, default value is cd %1%
-
-  - command-separator
-
-    the system defined character to run several commands serially as boost::format string, default value is %1% ; %2%
-
-    alias command_separator
-
-  - make
-
-    the make command to run makefile, default value is make
-
-  - maketree
-
-    the maketree command to run maketree in a folder, default value is maketree
-
-  - make-clean
-
-    the make clean command to run clean target in a makefile, default value is make clean
-
-    alias make_clean
-
-  - maketree-clean
-
-    the maketree clean command to run in a folder, default value is maketree -c
-
-    alias maketree_clean
-
-  - command-surround
-
-    the system defined method to surround several serial command in boost::format string, default value is (%1%)
-
-    alias command_surround
-
-dirs can include
-
-  - -folder
-
-    remove folder from build targets in current directory
-
-  - folder1:folder2 folder3
-
-    folder1 depends on folder2 and folder3
-
-    you can also write this line as
-
-    folder1 folder2 folder3
-
-
-examples,
-
-there are two example projects in the folder
-
-  - test-project
-
-    it shows how to use autocompile to generate Makefile, it has one .h file, one .hpp file, two .cpp files, while it also needs to include boost_system to compile. so the .autocompile file only needs to provide the dlibs as boost_system.
-
-    run ./autocompile.sh or ../autocompile > Makefile will generate Makefile against .autocompile.
-
-  - test-project2
-
-    it shows the combination of maketree and autocompile, while maketree can help to update Makefile by running 'maketree autocompile'. it will run 'make autocompile' in each folder with Makefile.
-
-    while there are several dirs files to show the dependencies between each folder.
-
-
-  - change compiler
-
-    if you would like to change compiler for a project, but do not want to change .autocompile files from all the folders, you can choose to create a .autocompile file in home folder, i.e. /home/<user-name>/.autocompile, and set cc parameter. i.e. 'cc clang++' in your .autocompile file. and run 'maketree autocompile' to update all the Makefiles in the project.
-
-  - bootstrap a fresh checkout / project
-
-    if you clone a project without Makefiles, you can use the bootstrap file to initialize all Makefiles across the tree:
-
-    run 'maketree -f /path/to/autocompile/bootstrap' to generate Makefiles in all target folders.
-
+## 📄 License
+Released under the MIT License.
